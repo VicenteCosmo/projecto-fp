@@ -7,7 +7,7 @@ Data: 05.06.2026.
 ****************************************************************/
 
 /*
-1. Objectivo: Desenvolver um sistema para manipular certificados
+1. Objectivo: Desenvolver um sistema para gerir certificados de um centro previamente conhecido.
 
 2. GUI - Graphic User Interface
 
@@ -32,4 +32,13 @@ Data: 05.06.2026.
 	CategoriaModelo
 		int id;
 		String categoria
+4. Persistência de Dados
+4.1 - Tabela de Apoio
+
+4.2 - Ficheiro de Dados
+	Certificados.DAT
+
+4.3 - IMplementação
+	Linguagem de Programação - Jva (Swing);
+	IDE: nano
 */

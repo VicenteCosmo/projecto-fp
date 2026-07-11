@@ -8,10 +8,11 @@ Data: 05.06.2026.
 
 import SwingComponents.*;
 import javax.swing.*;
-import java.io.RandomAccessFile;
+import java.io.*;
+
 
 	
-public class CertificadoModelo
+public class CertificadoModelo implements RegistGeneric
 {
 	//atributos
 	public int id;
@@ -124,39 +125,66 @@ public class CertificadoModelo
 		return str;
 	}
 
-
-/*	public static void main(String args[])
+	public long sizeof()
 	{
+		long sizeof = 0;
 		
 		try
 		{
-			// 1. Criamos um objeto vazio (com o construtor padrão) para receber a leitura
-			CertificadoModelo modelo = new CertificadoModelo();
-
-			// 2. Abre o ficheiro binário em modo de leitura e escrita
-			RandomAccessFile file = new RandomAccessFile("certificados.dat", "rw");
-			
-			// 3. Posiciona o ponteiro no início do ficheiro (caso queira ler desde o início)
-				file.seek(0);
-
-			// Se no método write gravou o ID antes do slug, descomente a linha abaixo para saltar os 4 bytes do ID:
-			// file.readInt(); 
-
-			// 4. CHAMADA OBRIGATÓRIA ao método read do StringBufferModelo através do atributo slug
-			modelo.slug.read(file);
-
-			// 5. Fecha o ficheiro de forma segura
-			file.close();
-
-			// 6. Apresenta o resultado limpo (recorrendo ao método getSlug() que já faz o trim())
-			String mensagem = "Slug lido do ficheiro: " + modelo.getSlug();
-			JOptionPane.showMessageDialog(null, mensagem);
+			sizeof = 4 + 100 + 120 + 12 + 12 + 12 + 12;
 		}
-		catch (Exception e)
+		catch(Exception ex)
 		{
-			// Captura falhas de leitura ou fim inesperado de ficheiro (EOFException)
-			JOptionPane.showMessageDialog(null, "Erro ao ler o ficheiro: " + e.getMessage());
+			ex.printStackTrace();
 		}
 
-	}*/
+		return sizeof;
+
+	}
+
+	public void write(RandomAccessFile stream)
+	{
+		try
+                {
+                        stream.writeInt(id);
+			numeroCertificado.write(stream);
+			slug.write(stream);
+			dataInicioCurso.write(stream);
+			dataFimCurso.write(stream);
+			dataEmissao.write(stream);
+			dataValidade.write(stream);
+                }
+                catch(IOException ex)
+                {
+                        ex.printStackTrace();
+                }
+
+	}
+
+	public void read(RandomAccessFile stream)
+        {
+                try
+                {
+                        id = stream.readInt();
+                        numeroCertificado.read(stream);
+                        slug.read(stream);
+                        dataInicioCurso.read(stream);
+                        dataFimCurso.read(stream);
+                        dataEmissao.read(stream);
+                        dataValidade.read(stream);
+                }
+                catch(IOException ex)
+                {
+                        ex.printStackTrace();
+                }
+
+        }
+
+	//Ligar o modelo ao ficheiro
+	public void salvarDados()
+	{
+		CertificadoFile file = new CertificadoFile(this);
+		file.salvarDados();
+	}
+
 }

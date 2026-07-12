@@ -2,7 +2,7 @@
 Projecto de Fundamentos de Programação II;
 Tema: Sistema de Gestão Certificados;
 Nome: Viente Cosmo, N. 36479;
-File Name: Analise.java;
+File Name: Apresentacao.java;
 Data: 05.06.2026.
 ****************************************************************/
 
@@ -31,10 +31,11 @@ public class Apresentacao extends JFrame
 		container.setBackground(Color.GRAY);
 
 		container.add(new PainelApresentacao(), "MAIN");
-		container.add(new Login(), "LOGIN");
-		container.add(new Dashboard(), "DASHBOARD");
-		container.add(new Form(), "FORM");
-
+		container.add(new Login(this), "LOGIN");
+		container.add(new CertificadoVisao(this), "DASHBOARD");
+		//container.add(new EstudanteVisao(), "DASHBOARD");
+		container.add(new Form(this), "FORM");
+		container.add(new EstudanteForm(this), "EstudanteForm");
 		this.add(container);
 
 		cardLayout.show(container, "MAIN");
@@ -53,7 +54,7 @@ public class Apresentacao extends JFrame
 		JButton avancarJBT, fecharJBT;
 		ImageIcon logo = new ImageIcon("image/certificate-icon.png");
 		JLabel logoLb;
-		
+
 		JButton btnEntrar;
 		JButton btnBody;
 

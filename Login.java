@@ -18,8 +18,11 @@ public class Login extends JPanel implements ActionListener
 	private JTextField nomeF;
 	private JPasswordField passwordF;
 
-	public Login()
+	private Apresentacao app;
+
+	public Login(Apresentacao app)
 	{
+		this.app = app;
 		//super("Login");	//titulo do formulario
 		this.setLayout(new GridBagLayout());
 
@@ -95,23 +98,23 @@ public class Login extends JPanel implements ActionListener
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		container.add(btn, gbc);
-		
+
 		//container.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 		container.setOpaque(false);
 		container.setBackground(Color.decode("#d0e3fb"));
 		//container.setPreferredSize(new Dimension(350, 200));
-			
+
 		//
 		GridBagConstraints gbcMain = new GridBagConstraints();
 		gbcMain.insets = new Insets(150, 150, 150, 150);
-		
+
 		this.setBackground(Color.decode("#d0e3fb"));
 		this.add(container, gbcMain);
 
 	}
 	public void actionPerformed(ActionEvent e)
-	{	
-		Apresentacao app = new Apresentacao();
+	{
+		//Apresentacao app = new Apresentacao();
 		app.cardLayout.show(app.container, "DASHBOARD");
 	}
 

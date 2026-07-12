@@ -2,7 +2,7 @@
 Projecto de Fundamentos de Programação II;
 Tema: Sistema de Gestão Certificados;
 Nome: Viente Cosmo, N. 36479;
-File Name: Analise.java;
+File Name: Form.java;
 Data: 05.06.2026.
 *****************************************************************/
 
@@ -27,14 +27,19 @@ public class Form extends JPanel implements ActionListener
       	private JTextField dataEmissao;
        	private JTextField dataValidade;
 
+	private CertificadoFile file;
+	private Apresentacao app;
 
-        public Form()
+        public Form(Apresentacao app)
         {
+
+		this.app = app;
                 //super("Login");       //titulo do formulario
                 this.setLayout(new GridBagLayout());
 
                 container = new JPanel(new GridBagLayout());
 
+		file = new CertificadoFile(new CertificadoModelo());
                 //Font
                 Font font = new Font("Segoe UI", Font.PLAIN, 20);
 
@@ -44,6 +49,8 @@ public class Form extends JPanel implements ActionListener
                 idLb.setForeground(Color.decode("#2d3436"));
                 id = new JTextField(15);
                 //nomeF.setPreferredSize(new Dimension(200, 30));
+		id.setText(""+file.getNextID());
+		id.setEditable(false);
                 id.setFont(font);
 
                 //Campo password
@@ -216,10 +223,12 @@ public class Form extends JPanel implements ActionListener
 		
 		//Salvar dados
 		try{
-
-			RandomAccessFile file = new RandomAccessFile("certificados.dat", "rw");
+		
+			modelo.salvarDados();
+			//JOptionPane.showMessageDialog(null, modelo.toString());
+			//RandomAccessFile file = new RandomAccessFile("certificados.dat", "rw");
 			//Não sobreescrever os dados existentes
-			file.seek(file.length());
+			/*file.seek(file.length());
 
 			file.writeInt(idInt);
 			modelo.numeroCertificado.write(file);
@@ -230,22 +239,26 @@ public class Form extends JPanel implements ActionListener
 			modelo.dataValidade.write(file);
 			
 			JOptionPane.showMessageDialog(this, "Dados salvos com sucesso!");
-			file.close();
+			file.close(); */
 			//Redireciona para o Dashboard
-			Apresentacao app = new Apresentacao();
-			app.cardLayout.show(app.container, "DASHBOARD");
+			//Apresentacao app = new Apresentacao();
+			//app.cardLayout.show(app.container, "DASHBOARD");
 
 		}
 		catch(Exception exc)
 		{
 			JOptionPane.showMessageDialog(this, "AVISO: Não foi possível salvar os dados." + "\n" + exc);
 		}
-		
+		finally
+		{
+			app.cardLayout.show(app.container, "DASHBOARD");
+		}
 		//JOptionPane.showMessageDialog(this, modelo.toString());
 		
                 //app.cardLayout.show(app.container, "DASHBOARD");
         }
 
 }
+
 
 

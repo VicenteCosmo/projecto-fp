@@ -36,7 +36,9 @@ Data: 05.06.2026.
 4.1 - Tabela de Apoio
 
 4.2 - Ficheiro de Dados
-	Certificados.DAT
+^	Certificados.DAT
+	Estudante.DAT
+	
 
 4.3 - IMplementação
 	Linguagem de Programação - Jva (Swing);

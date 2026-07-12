@@ -2,7 +2,7 @@
 Projecto de Fundamentos de Programação II;
 Tema: Sistema de Gestão Certificados;
 Nome: Viente Cosmo, N. 36479;
-File Name: Analise.java;
+File Name: CertificadoModelo.java;
 Data: 05.06.2026.
 ****************************************************************/
 

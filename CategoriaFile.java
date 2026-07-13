@@ -2,7 +2,7 @@
 Projecto de Fundamentos de Programação II;
 Tema: Sistema de Gestão Certificados;
 Nome: Viente Cosmo, N. 36479;
-File Name: EstudanteFile.java;
+File Name: CategoriaFile.java;
 Data: 05.06.2026.
 ****************************************************************/
 
@@ -11,13 +11,13 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
-public class EstudanteFile extends ObjectsFile
+public class CategoriaFile extends ObjectsFile
 {
-	EstudanteModelo modelo;
+	CategoriaModelo modelo;
 	
-	public EstudanteFile(EstudanteModelo model)
+	public CategoriaFile(CategoriaModelo model)
 	{
-		super("Estudantes.DAT", model);
+		super("Categorias.DAT", model);
 		
 		this.modelo = model;
 	}
@@ -38,20 +38,20 @@ public class EstudanteFile extends ObjectsFile
 			//incrementa o id
 			incrementarProximoCodigo();
 			
-			JOptionPane.showMessageDialog(null, "Registo do Estudante Adicionado com Sucesso");
+			JOptionPane.showMessageDialog(null, "Registo da Categoria Adicionado com Sucesso");
 		}
 		catch(IOException ex)
 		{
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar registrar o estudante.");
+			JOptionPane.showMessageDialog(null, "Erro ao tentar registrar a categoria.");
 		}
 	}
 	
 	//mostra todos os registos
-	public void listarEstudantes()
+	public void listarCategorias()
 	{
-		EstudanteModelo temp_model = new EstudanteModelo();
-		String output = "Dados do Estudante\n\n";
+		CategoriaModelo temp_model = new CategoriaModelo();
+		String output = "Dados da Categoria\n\n";
 		
 		try
 		{
@@ -80,9 +80,9 @@ public class EstudanteFile extends ObjectsFile
 	}
 
 	//Retornar uma lista pronta dos estudantes
-	public List<EstudanteModelo> listarEstudantesProntos()
+	public List<CategoriaModelo> listarCategoriasProntas()
 	{
-		List<EstudanteModelo> lista = new ArrayList<>();
+		List<CategoriaModelo> lista = new ArrayList<>();
 		
 		try {
         		stream.seek(4);
@@ -90,7 +90,7 @@ public class EstudanteFile extends ObjectsFile
         		for (int i = 0; i < getNregistos(); i++) 
 			{
             			// Criar uma nova instância para cada registo, evitando duplicar referências
-            			EstudanteModelo temp_model = new EstudanteModelo();
+            			CategoriaModelo temp_model = new CategoriaModelo();
             			temp_model.read(stream); 
             			lista.add(temp_model);
         		}
@@ -107,7 +107,7 @@ public class EstudanteFile extends ObjectsFile
 
 
 	//Pesquisar pelo id
-	public EstudanteModelo pesquisarEstudantePorId(int id)
+	public CategoriaModelo pesquisarCategoriaPorId(int id)
 	{
 
 		try
@@ -117,7 +117,7 @@ public class EstudanteFile extends ObjectsFile
 
 			for (int i = 0; i < getNregistos(); i++)
 			{
-				EstudanteModelo temp_model = new EstudanteModelo();
+				CategoriaModelo temp_model = new CategoriaModelo();
 				temp_model.read( stream );
 
 				if (temp_model.getId() == id)
@@ -136,7 +136,7 @@ public class EstudanteFile extends ObjectsFile
 	}
 
 	//Por nome
-	public EstudanteModelo pesquisarEstudantePorNome(String nome)
+	public CategoriaModelo pesquisarCategoriaPorNome(String nome)
         {
 
                 try
@@ -146,7 +146,7 @@ public class EstudanteFile extends ObjectsFile
 
                         for (int i = 0; i < getNregistos(); i++)
                         {
-                                EstudanteModelo temp_model = new EstudanteModelo();
+                               	CategoriaModelo temp_model = new CategoriaModelo();
                                 temp_model.read( stream );
 
                                 if (temp_model.getNome().equals(nome.trim()))
@@ -168,6 +168,7 @@ public class EstudanteFile extends ObjectsFile
 	//Atualizar
 	public void atualizarDadosPorId(int id)
 	{
+
 		try
 		{
 			stream.seek(4);
@@ -176,7 +177,7 @@ public class EstudanteFile extends ObjectsFile
 			{
 				long posicao = stream.getFilePointer();
 
-				EstudanteModelo temp_model = new EstudanteModelo();
+				CategoriaModelo temp_model = new CategoriaModelo();
 
 				temp_model.read(stream);
 
@@ -184,50 +185,19 @@ public class EstudanteFile extends ObjectsFile
 				{
 					stream.seek(posicao);
 					modelo.write(stream);
-					JOptionPane.showMessageDialog(null, "Registo do Estudante Atualizado com Sucesso");
+					
+					JOptionPane.showMessageDialog(null, "Registo da Categoria Atualizado com Sucesso");
+
 					break;
 				}
+
 			}
 
 		}
 		catch(IOException ex)
 		{
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar registrar o estudante.");
+			JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar a categoria.");
 		}
-	}
-
-
-	public void pesquisarCertificadoPeloNomeDoEstudante(String nomeProcurado)
-	{
-		EstudanteModelo temp_model = new EstudanteModelo();
-		String output = "Resultado da Pesquisa do Nome: " + nomeProcurado + "\n\n";
-		
-		try
-		{
-			//coloca o cursor na posicao 4 do ficheiro
-			stream.seek( 4 );
-			
-			for (int i = 0; i < getNregistos(); i++)
-			{
-				temp_model.read( stream );
-				
-				//equals(Ana, ana) //equalsIgnoreCase(Ana, ana);
-				
-				if (temp_model.getNome().equalsIgnoreCase(nomeProcurado))
-					output += temp_model.toString() + "\n";
-			}
-		}
-		catch(IOException ex)
-		{
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar Pesquisar os dados");
-		}
-		
-		JTextArea area = new JTextArea(20, 40);
-		area.setText(output);
-		area.setEditable(false);
-		
-		JOptionPane.showMessageDialog(null, new JScrollPane(area));
 	}
 }

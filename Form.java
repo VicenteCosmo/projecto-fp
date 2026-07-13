@@ -11,17 +11,20 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.RandomAccessFile;
 import java.io.IOException;
+import java.util.List;
 
 public class Form extends JPanel implements ActionListener
 {
 
         private JPanel container;
         private JTextField nomeF;
+	private JButton btnSalvar;
         private JPasswordField passwordF;
 
 	private JTextField id;
+	private JComboBox<String> nome;
         private JTextField numeroCertificado;
-    	private JTextField slug;
+    	private JComboBox<String> curso;
         private JTextField dataInicioCurso;
      	private JTextField dataFimCurso;
       	private JTextField dataEmissao;
@@ -61,12 +64,44 @@ public class Form extends JPanel implements ActionListener
                 //nomeF.setPreferredSize(new Dimension(200, 30));
                 numeroCertificado.setFont(font);
 
-                //Campo slug
-                JLabel slugLb = new JLabel("Slug", SwingConstants.RIGHT);
-                slugLb.setFont(font);
-                slugLb.setForeground(Color.decode("#2d3436"));
-                slug = new JPasswordField(15);
-                slug.setFont(font);
+                //Campo nome
+                JLabel nomeLb = new JLabel("Nome", SwingConstants.RIGHT);
+                nomeLb.setFont(font);
+                nomeLb.setForeground(Color.decode("#2d3436"));
+                nome = new JComboBox<String>();
+                nome.setFont(font);
+		try 
+                {
+                        EstudanteFile estFile = new EstudanteFile(new EstudanteModelo());
+                        List<EstudanteModelo> estudantes = estFile.listarEstudantesProntos();
+                        for (EstudanteModelo est : estudantes) {
+                                nome.addItem(est.nome.toStringEliminatingSpaces()); 
+                }
+                } 
+                catch (Exception e) 
+                {
+                        nome.addItem("Erro ao carregar estudantes");
+                }
+
+
+		//Campo curso
+                JLabel cursoLb = new JLabel("Curso", SwingConstants.RIGHT);
+                cursoLb.setFont(font);
+                cursoLb.setForeground(Color.decode("#2d3436"));
+                curso = new JComboBox<String>();
+                curso.setFont(font);
+		try
+		{
+            		CategoriaFile catFile = new CategoriaFile(new CategoriaModelo());
+            		List<CategoriaModelo> cats = catFile.listarCategoriasProntas();
+            		for (CategoriaModelo cat : cats) {
+                		curso.addItem(cat.nome.toStringEliminatingSpaces());
+            	}
+        	}
+		catch (Exception e) 
+		{
+            		curso.addItem("Erro ao carregar categorias");
+        	}
 
 		//Campo Data de Início
                 JLabel dataInicioCursoLb = new JLabel("Data de Fim", SwingConstants.RIGHT);
@@ -97,27 +132,27 @@ public class Form extends JPanel implements ActionListener
                 dataValidade.setFont(font);
 
                 //Botao
-                JButton btn = new JButton("Salvar");
-                btn.setFocusPainted(false);
-                btn.setBorderPainted(false);
-                btn.setFont(new Font("Segoe UI", Font.BOLD, 20));
-                btn.setBackground(Color.decode("#d0e3fb"));
+                btnSalvar = new JButton("Salvar");
+                btnSalvar.setFocusPainted(false);
+                btnSalvar.setBorderPainted(false);
+                btnSalvar.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                btnSalvar.setBackground(Color.decode("#d0e3fb"));
 
-                btn.addActionListener(this);
-                btn.addMouseListener(
+                btnSalvar.addActionListener(this);
+                btnSalvar.addMouseListener(
 
                         new MouseAdapter()
                         {
                                 @Override
                                 public void mouseEntered(MouseEvent e)
                                 {
-                                        btn.setBackground(Color.WHITE);
-                                        btn.setFont(new Font("Segoe UI", Font.PLAIN, 22));
+                                        btnSalvar.setBackground(Color.WHITE);
+                                        btnSalvar.setFont(new Font("Segoe UI", Font.PLAIN, 22));
                                 }
                                 public void mouseExited(MouseEvent e)
                                 {
-                                        btn.setFont(new Font("Segoe UI", Font.BOLD, 20));
-                                        btn.setBackground(Color.decode("#d0e3fb"));
+                                        btnSalvar.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                                        btnSalvar.setBackground(Color.decode("#d0e3fb"));
                                 }
 			}
                 );
@@ -125,10 +160,10 @@ public class Form extends JPanel implements ActionListener
 
                 //Configuara as posicoes L 0
                 GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(8, 8, 8, 8);
+                gbc.insets = new Insets(4, 8, 4, 8);
 
                 gbc.gridx = 0; gbc.gridy = 0;
-                //gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0;
+                gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
                 container.add(idLb, gbc);
 
                 //
@@ -137,58 +172,74 @@ public class Form extends JPanel implements ActionListener
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 container.add(id, gbc);
 
-		//L 1
+		//L 1, nome
                 gbc.gridx = 0; gbc.gridy = 1;
-                container.add(numCertificadoLb, gbc);
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                container.add(nomeLb, gbc);
 
                 gbc.gridx = 1; gbc.gridy = 1;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(numeroCertificado, gbc);
-
+                container.add(nome, gbc);
+		
 		//L 2
                 gbc.gridx = 0; gbc.gridy = 2;
-                container.add(slugLb, gbc);
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                container.add(numCertificadoLb, gbc);
 
                 gbc.gridx = 1; gbc.gridy = 2;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(slug, gbc);
-
+                container.add(numeroCertificado, gbc);
+		
 		//L 3
                 gbc.gridx = 0; gbc.gridy = 3;
-                container.add(dataInicioCursoLb, gbc);
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                container.add(cursoLb, gbc);
 
                 gbc.gridx = 1; gbc.gridy = 3;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(dataInicioCurso, gbc);
-
+                container.add(curso, gbc);
+		
 		//L 4
                 gbc.gridx = 0; gbc.gridy = 4;
-                container.add(dataFimCursoLb, gbc);
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                container.add(dataInicioCursoLb, gbc);
 
                 gbc.gridx = 1; gbc.gridy = 4;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(dataFimCurso, gbc);
+                container.add(dataInicioCurso, gbc);
 
 		//L 5
                 gbc.gridx = 0; gbc.gridy = 5;
-                container.add(dataEmissaoLb, gbc);
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                container.add(dataFimCursoLb, gbc);
 
                 gbc.gridx = 1; gbc.gridy = 5;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(dataEmissao, gbc);
+                container.add(dataFimCurso, gbc);
 
 		//L 6
                 gbc.gridx = 0; gbc.gridy = 6;
-                container.add(dataValidadeLb, gbc);
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                container.add(dataEmissaoLb, gbc);
 
                 gbc.gridx = 1; gbc.gridy = 6;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+                container.add(dataEmissao, gbc);
+
+		//L 7
+                gbc.gridx = 0; gbc.gridy = 7;
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                container.add(dataValidadeLb, gbc);
+
+                gbc.gridx = 1; gbc.gridy = 7;
+                gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
                 container.add(dataValidade, gbc);
 
-                gbc.gridx = 0; gbc.gridy = 7;
+                gbc.gridx = 0; gbc.gridy = 11;
                 gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
                 gbc.anchor = GridBagConstraints.CENTER;
-                container.add(btn, gbc);
+                container.add(btnSalvar, gbc);
 
 		//container.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
                 container.setOpaque(false);
@@ -203,59 +254,95 @@ public class Form extends JPanel implements ActionListener
                 this.add(container, gbcMain);
 
         }
-        public void actionPerformed(ActionEvent e)
-        {       
+
+	//Construtor 2
+        public Form(Apresentacao app, String id, String nome, String numeroCertificado, String curso, String dataInicioCurso, String dataFimCurso, String dataEmissao, String dataValidade)
+        {
+                this(app);
+
+                this.id.setText(id);
+                this.nome.setSelectedItem(nome);
+                this.numeroCertificado.setText(numeroCertificado);
+		this.curso.setSelectedItem(curso);
+		this.dataInicioCurso.setText(dataInicioCurso);
+		this.dataFimCurso.setText(dataFimCurso);
+		this.dataEmissao.setText(dataEmissao);
+		this.dataValidade.setText(dataValidade);
+
+                this.btnSalvar.setText("Atualizar");
+        }
+
+	public void actionPerformed(ActionEvent e)
+        {
                 //Apresentacao app = new Apresentacao();
 
 		//Instanciar o modelo
 		
 		int idInt = Integer.parseInt(id.getText());
+		String nomeSelecionado = (String) this.nome.getSelectedItem();
+		String cursoSelecionado = (String) this.curso.getSelectedItem();
 		
 		CertificadoModelo modelo = new CertificadoModelo();
+
 		
 		modelo.setId(idInt);
+		modelo.setNome(nomeSelecionado);
 		modelo.setNumeroCertificado(this.numeroCertificado.getText());
-		modelo.setSlug(this.slug.getText());
+		modelo.setCurso(cursoSelecionado);
 		modelo.setDataInicioCurso(this.dataInicioCurso.getText());
 		modelo.setDataFimCurso(this.dataFimCurso.getText());
 		modelo.setDataEmissao(this.dataEmissao.getText());
 		modelo.setDataValidade(this.dataValidade.getText());
-		
+
+		//Dados da pesquisa
+		CertificadoFile eFile = new CertificadoFile(modelo);
+		CertificadoModelo result = eFile.pesquisarCertificadoPorProcesso(this.numeroCertificado.getText());
+
 		//Salvar dados
 		try{
-		
-			modelo.salvarDados();
-			//JOptionPane.showMessageDialog(null, modelo.toString());
-			//RandomAccessFile file = new RandomAccessFile("certificados.dat", "rw");
-			//Não sobreescrever os dados existentes
-			/*file.seek(file.length());
 
-			file.writeInt(idInt);
-			modelo.numeroCertificado.write(file);
-			modelo.slug.write(file);
-			modelo.dataInicioCurso.write(file);
-			modelo.dataFimCurso.write(file);
-			modelo.dataEmissao.write(file);
-			modelo.dataValidade.write(file);
-			
-			JOptionPane.showMessageDialog(this, "Dados salvos com sucesso!");
-			file.close(); */
-			//Redireciona para o Dashboard
-			//Apresentacao app = new Apresentacao();
-			//app.cardLayout.show(app.container, "DASHBOARD");
+			if(nomeSelecionado.trim().isEmpty())
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o nome!");
+			else if(numeroCertificado.getText().trim().isEmpty())
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o número do certificado!");
+			else if(cursoSelecionado.trim().isEmpty())
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o curso!");
+			else if(dataInicioCurso.getText().trim().isEmpty())
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de início do curso!");
+			else if(dataFimCurso.getText().trim().isEmpty())
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de fim do curso!");
+			else if(dataEmissao.getText().trim().isEmpty())
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de emissão do certificado!");
+			else if(dataValidade.getText().trim().isEmpty())
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de validade do certificado!");
+			else
+			{
+				String btnText = btnSalvar.getText();
 
+				if("Salvar".equals(btnText))
+				{
+					if(result == null)
+						modelo.salvarDados();
+					else
+						JOptionPane.showMessageDialog(null, "Certificado já registrado. \n" + "Por favor, registre um novo certificado!");
+				}
+				else if("Atualizar".equals(btnText))
+				{
+					if(result == null)
+						modelo.atualizarDadosPorId(idInt);
+					else
+						JOptionPane.showMessageDialog(null, "Certificado já registrado. \n" + "Por favor, registre um novo certificado!");
+
+				}
+
+				app.cardLayout.show(app.container, "DASHBOARD");
+			}
 		}
 		catch(Exception exc)
 		{
 			JOptionPane.showMessageDialog(this, "AVISO: Não foi possível salvar os dados." + "\n" + exc);
 		}
-		finally
-		{
-			app.cardLayout.show(app.container, "DASHBOARD");
-		}
-		//JOptionPane.showMessageDialog(this, modelo.toString());
-		
-                //app.cardLayout.show(app.container, "DASHBOARD");
+
         }
 
 }

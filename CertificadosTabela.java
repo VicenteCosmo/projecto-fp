@@ -20,6 +20,16 @@ class CertificadosTabela extends JPanel
 		private JButton btnAdd;
 		private DefaultTableModel model;
 
+		//COMPONENTES para o sistema de pesquisa
+                private JTextField txtPesquisa;
+                private JButton btnPesquisar;
+
+                // Cards indicadores
+                private JPanel pnlCards;
+
+                private int coluna, linha;
+
+
 		public CertificadosTabela(Apresentacao app)
 		{
 			
@@ -31,13 +41,15 @@ class CertificadosTabela extends JPanel
         		body.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
 			 // Cards indicadores
-		        JPanel pnlCards = new JPanel(new GridLayout(1, 3, 20, 0));
-		        pnlCards.setBackground(new Color(240, 242, 245));
-		        //pnlCards.setMaximumSize(new Dimension(1100, 100));
 
-		        pnlCards.add(criarCardDash("Total de Certificados", "1.284", "+12% este mês"));
-		        pnlCards.add(criarCardDash("Alunos Cadastrados", "08", "Ativos no sistema"));
-		        pnlCards.add(criarCardDash("Categorias Ativas", "1.284", "Operacionais"));
+			//pnlCards.setMaximumSize(new Dimension(1100, 100));
+                        pnlCards = new JPanel(new GridLayout(1, 3, 20, 0));
+                        pnlCards.setBackground(new Color(240, 242, 245));
+
+                        pnlCards.add(criarCardDash("Total de Certificados", "0", "+12% este mês"));
+                        pnlCards.add(criarCardDash("Alunos Cadastrados", "0", "Ativos no sistema"));
+                        pnlCards.add(criarCardDash("Categorias Ativas", "0", "Operacionais"));
+
 		        body.add(pnlCards);
 		        body.add(Box.createVerticalStrut(25));
 		
@@ -59,17 +71,70 @@ class CertificadosTabela extends JPanel
 				}
 			);
 
-			JPanel norteBody = new JPanel(new BorderLayout());
-			norteBody.add(lblTabTitle, BorderLayout.WEST);
-			norteBody.add(btnAdd, BorderLayout.EAST);
+			// Pesquisa
+                        txtPesquisa = new JTextField(15);
+                        btnPesquisar = new JButton("Pesquisar");
+
+                        // Filtra usando o texto digitado
+                        btnPesquisar.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                        pesquisarDados(txtPesquisa.getText());
+                                }
+                        });
+
+			// Painel para agrupar os elementos do lado direito (Pesquisa + Botão Adicionar)
+                        JPanel pnlAcoesDireita = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+                        pnlAcoesDireita.setBackground(Color.WHITE);
+                        pnlAcoesDireita.add(new JLabel("Nome:"));
+                        pnlAcoesDireita.add(txtPesquisa);
+                        pnlAcoesDireita.add(btnPesquisar);
+                        pnlAcoesDireita.add(btnAdd);
+
+                        JPanel norteBody = new JPanel(new BorderLayout());
+                        norteBody.add(lblTabTitle, BorderLayout.WEST);
+                        norteBody.add(pnlAcoesDireita, BorderLayout.EAST);
 
         		lblTabTitle.setFont(new Font("Arial", Font.BOLD, 16));
         		pnlTabela.add(norteBody, BorderLayout.NORTH);
 			
-			String colunas[] = {"Nome", "Nº Cert.", "Curso", "Data", "Status"};
-			model = new DefaultTableModel(colunas, 0);
-		
+			String colunas[] = {"id", "Nome", "Nº Cert.", "Curso", "Início", "Fim", "Emissao", "Validade", "Atualizar"};
+			model = new DefaultTableModel(colunas, 0)
+                        {
+                                @Override
+                                public boolean isCellEditable(int row, int collumn)
+                                {
+                                        return false;
+                                }
+                        };
+
+
 			JTable table = new JTable(model);
+			
+			table.addMouseListener( new MouseAdapter() {
+                                public void mouseClicked(MouseEvent e)
+                                {
+                                        coluna = table.columnAtPoint(e.getPoint());
+                                        linha = table.rowAtPoint(e.getPoint());
+                                        
+                                        if(coluna == 8 && linha != -1)
+                                        {
+                                                String idCertificado = table.getValueAt(linha, 0).toString();
+                                                String nomeCertificado = table.getValueAt(linha, 1).toString();
+                                                String numCertificado = table.getValueAt(linha, 2).toString();
+						String cursoCertificado = table.getValueAt(linha, 3).toString();
+						String inicioCertificado = table.getValueAt(linha, 4).toString();
+						String fimCertificado = table.getValueAt(linha, 5).toString();
+						String emissaoCertificado = table.getValueAt(linha, 6).toString();
+						String validadeCertificado = table.getValueAt(linha, 7).toString();
+
+                                                app.container.add(new Form(app, idCertificado, nomeCertificado, numCertificado, cursoCertificado,
+									inicioCertificado, fimCertificado, emissaoCertificado, validadeCertificado), "CertificadoForm2");
+
+                                                app.cardLayout.show(app.container, "CertificadoForm2");
+                                        }
+                                }
+                        });
+
 			table.setRowHeight(30);
 			table.setGridColor(new Color(230, 230, 230));
 			JScrollPane scrollPane = new JScrollPane(table);
@@ -96,21 +161,38 @@ class CertificadosTabela extends JPanel
 		        CertificadoModelo temp_model = new CertificadoModelo();
 			CertificadoFile file = new CertificadoFile(temp_model);
 
+			//Total
+                        CategoriaFile cat_model_file = new CategoriaFile(new CategoriaModelo());
+                        EstudanteFile est_model_file = new EstudanteFile(new EstudanteModelo());
+
+                        pnlCards.removeAll();
+                        pnlCards.add(criarCardDash("Total de Certificados", String.valueOf(file.getNregistos()), "+12% este mês"));
+                        pnlCards.add(criarCardDash("Alunos Cadastrados", String.valueOf(est_model_file.getNregistos()), "Ativos no sistema"));
+                        pnlCards.add(criarCardDash("Categorias Ativas", String.valueOf(cat_model_file.getNregistos()), "Operacionais"));
+
+
 			List<CertificadoModelo> certificados = file.listarCertificadosProntos();
 
 			for (CertificadoModelo certificado : certificados)
 				model.addRow(
                                 	new Object[]{
+						certificado.id,
+						certificado.nome.toStringEliminatingSpaces(),
                                     		certificado.numeroCertificado.toStringEliminatingSpaces(),
+						certificado.curso.toStringEliminatingSpaces(),
                                     		certificado.dataInicioCurso.toString(),
                                     		certificado.dataFimCurso.toString(),
                                     		certificado.dataEmissao.toString(),
-                                    		certificado.dataValidade.toString()
+                                    		certificado.dataValidade.toString(),
+						"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Editar</a></html>",
                                    	}
                             	);
 
 
 		        model.fireTableDataChanged();
+			this.revalidate();
+                        this.repaint();
+
 		    }
 		    catch(Exception exc)
 		    {
@@ -118,6 +200,52 @@ class CertificadosTabela extends JPanel
 		    }
 		}
 
+		// Filtra e exibe os dados com base na String pesquisada
+		public void pesquisarDados(String termoBusca)
+		{
+			// Se o campo estiver vazio, recarrega a tabela completa
+			if (termoBusca == null || termoBusca.trim().isEmpty()) {
+				carregarDados();
+				return;
+			}
+
+			if(model != null)
+				model.setRowCount(0);
+
+			try
+			{
+				CertificadoModelo temp_model = new CertificadoModelo();
+				CertificadoFile file = new CertificadoFile(temp_model);
+
+				List<CertificadoModelo> certificados = file.listarCertificadosProntos();
+
+				for (CertificadoModelo certificado : certificados) 
+				{
+					String nomeCompleto = certificado.nome.toStringEliminatingSpaces();
+
+					if (nomeCompleto.toLowerCase().contains(termoBusca.toLowerCase().trim())) {
+						model.addRow(
+							new Object[]{
+									certificado.id,
+									certificado.nome.toStringEliminatingSpaces(),
+			                                    		certificado.numeroCertificado.toStringEliminatingSpaces(),
+									certificado.curso.toStringEliminatingSpaces(),
+			                                    		certificado.dataInicioCurso.toString(),
+			                                    		certificado.dataFimCurso.toString(),
+			                                    		certificado.dataEmissao.toString(),
+			                                    		certificado.dataValidade.toString(),
+									"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Editar</a></html>",
+							}
+						);
+					}
+				}
+				model.fireTableDataChanged();
+			}
+			catch(Exception exc)
+			{
+				System.out.println("Erro na pesquisa: " + exc.getMessage());
+			}
+		}
 
 		private JPanel criarCardDash(String titulo, String valor, String sub) 
 		{

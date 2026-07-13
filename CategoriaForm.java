@@ -2,7 +2,7 @@
 Projecto de Fundamentos de Programação II;
 Tema: Sistema de Gestão Certificados;
 Nome: Viente Cosmo, N. 36479;
-File Name: Form.java;
+File Name: CategoriaForm.java;
 Data: 05.06.2026.
 *****************************************************************/
 
@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.io.RandomAccessFile;
 import java.io.IOException;
 
-public class EstudanteForm extends JPanel implements ActionListener
+public class CategoriaForm extends JPanel implements ActionListener
 {
 
         private JPanel container;
@@ -22,13 +22,12 @@ public class EstudanteForm extends JPanel implements ActionListener
 
 	private JTextField id;
         private JTextField nome;
-    	private JTextField bi;
 
-	private EstudanteFile file;
+	private CategoriaFile file;
 	private Apresentacao app;
 
 
-        public EstudanteForm(Apresentacao app)
+        public CategoriaForm(Apresentacao app)
         {
 		this.app = app;
                 //super("Login");       //titulo do formulario
@@ -36,7 +35,7 @@ public class EstudanteForm extends JPanel implements ActionListener
 
                 container = new JPanel(new GridBagLayout());
 
-		file = new EstudanteFile(new EstudanteModelo());
+		file = new CategoriaFile(new CategoriaModelo());
                 //Font
                 Font font = new Font("Segoe UI", Font.PLAIN, 20);
 
@@ -57,13 +56,6 @@ public class EstudanteForm extends JPanel implements ActionListener
 		nome = new JTextField(15);
                 //nomeF.setPreferredSize(new Dimension(200, 30));
                 nome.setFont(font);
-
-                //Campo slug
-                JLabel slugLb = new JLabel("Nº.", SwingConstants.RIGHT);
-                slugLb.setFont(font);
-                slugLb.setForeground(Color.decode("#2d3436"));
-                bi = new JTextField(15);
-                bi.setFont(font);
 
                 //Botao
                 btnSalvar = new JButton("Salvar");
@@ -114,14 +106,6 @@ public class EstudanteForm extends JPanel implements ActionListener
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
                 container.add(nome, gbc);
 
-		//L 2
-                gbc.gridx = 0; gbc.gridy = 2;
-                container.add(slugLb, gbc);
-
-                gbc.gridx = 1; gbc.gridy = 2;
-                gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(bi, gbc);
-
                 gbc.gridx = 0; gbc.gridy = 4;
                 gbc.gridwidth = 2;
                 gbc.anchor = GridBagConstraints.CENTER;
@@ -142,12 +126,11 @@ public class EstudanteForm extends JPanel implements ActionListener
         }
 
 	//Construtor 2
-	public EstudanteForm(Apresentacao app, String id, String nome, String bi)
+	public CategoriaForm(Apresentacao app, String id, String nome)
 	{
 		this(app);
 		this.id.setText(id);
 		this.nome.setText(nome);
-		this.bi.setText(bi);
 
 		this.btnSalvar.setText("Atualizar");
 	}
@@ -160,23 +143,20 @@ public class EstudanteForm extends JPanel implements ActionListener
 		
 		int idInt = Integer.parseInt(id.getText());
 		
-		EstudanteModelo modelo = new EstudanteModelo();
+		CategoriaModelo modelo = new CategoriaModelo();
 		
 		modelo.setId(idInt);
 		modelo.setNome(this.nome.getText());
-		modelo.setBI(this.bi.getText());
 		
 		//Dados da pesquisa
-		EstudanteFile eFile = new EstudanteFile(modelo);
-		EstudanteModelo result = eFile.pesquisarEstudantePorNome(nome.getText());
+		CategoriaFile eFile = new CategoriaFile(modelo);
+		CategoriaModelo result = eFile.pesquisarCategoriaPorNome(nome.getText());
 
 		//Salvar dados
 		try{
 
 			if(nome.getText().trim().isEmpty())
-				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o nome do estudante!");
-			else if(bi.getText().trim().isEmpty())
-				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o BI do estudante!");
+				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o nome da categoria!");
 			else
 			{
 				String btnText = btnSalvar.getText();
@@ -186,14 +166,14 @@ public class EstudanteForm extends JPanel implements ActionListener
 					if(result == null)
 						modelo.salvarDados();
 					else
-						JOptionPane.showMessageDialog(null, "Estudante já registrado. \n" + "Por favor, registre um novo estudante!");
+						JOptionPane.showMessageDialog(null, "Categoria já registrada. \n" + "Por favor, registre uma nova categoria!");
 				}
 				else if("Atualizar".equals(btnText))
 				{
 					if(result == null)
 						modelo.atualizarDadosPorId(idInt);
 					else
-						JOptionPane.showMessageDialog(null, "Estudante já registrado. \n" + "Por favor, registre um novo estudante!");
+						JOptionPane.showMessageDialog(null, "Categoria já registrada. \n" + "Por favor, registre uma nova categoria!");
 
 				}
 
@@ -205,6 +185,9 @@ public class EstudanteForm extends JPanel implements ActionListener
 			JOptionPane.showMessageDialog(this, "AVISO: Não foi possível salvar os dados." + "\n" + exc);
 		}
 
+		//JOptionPane.showMessageDialog(this, modelo.toString());
+		
+                //app.cardLayout.show(app.container, "DASHBOARD");
         }
 
 }

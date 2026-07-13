@@ -2,7 +2,7 @@
 Projecto de Fundamentos de Programação II;
 Tema: Sistema de Gestão Certificados;
 Nome: Viente Cosmo, N. 36479;
-File Name: EstudantesTabela.java;
+File Name: CategoriasTabela.java;
 Data: 05.06.2026.
 *****************************************************************/
 
@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import java.io.RandomAccessFile;
 import java.util.List;
 
-class EstudantesTabela extends JPanel
+class CategoriasTabela extends JPanel
 {
 		private Apresentacao app;
 		
@@ -25,12 +25,17 @@ class EstudantesTabela extends JPanel
        	 	private JTextField txtPesquisa;
         	private JButton btnPesquisar;
 
-		// Cards indicadores
-		private JPanel pnlCards;
+		//Total dos itens
+		private JLabel totalCertificados;
+		private JLabel totalEstudantes;
+		private JLabel totalCategorias;
+
+		//Cards
+		JPanel pnlCards;
 
 		private int coluna, linha;
 		
-		public EstudantesTabela(Apresentacao app)
+		public CategoriasTabela(Apresentacao app)
 		{
 			this.app = app;
 		
@@ -39,13 +44,20 @@ class EstudantesTabela extends JPanel
 			body.setBackground(new Color(240, 242, 245));
         		body.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
+			 // Cards indicadores
+		        pnlCards = new JPanel(new GridLayout(1, 3, 20, 0));
+		        pnlCards.setBackground(new Color(240, 242, 245));
 		        //pnlCards.setMaximumSize(new Dimension(1100, 100));
-			pnlCards = new JPanel(new GridLayout(1, 3, 20, 0));
-			pnlCards.setBackground(new Color(240, 242, 245));
 
-		        pnlCards.add(criarCardDash("Total de Certificados", "0", "+12% este mês"));
-		        pnlCards.add(criarCardDash("Alunos Cadastrados", "0", "Ativos no sistema"));
-		        pnlCards.add(criarCardDash("Categorias Ativas", "0", "Operacionais"));
+
+			//Total
+			totalCertificados = new JLabel("0");
+			totalEstudantes = new JLabel("0");
+			totalCategorias = new JLabel("0");
+
+		        pnlCards.add(criarCardDash("Total de Certificados", totalCertificados.getText(), "+12% este mês"));
+		        pnlCards.add(criarCardDash("Alunos Cadastrados", totalEstudantes.getText(), "Ativos no sistema"));
+		        pnlCards.add(criarCardDash("Categorias Ativas", totalCategorias.getText(), "Operacionais"));
 		        body.add(pnlCards);
 		        body.add(Box.createVerticalStrut(25));
 		
@@ -54,15 +66,15 @@ class EstudantesTabela extends JPanel
 			pnlTabela.setBackground(Color.WHITE);
         		//pnlTabela.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		
-			JLabel lblTabTitle = new JLabel("EStudantes Recentes");
-			btnAdd = new JButton("Adicionar um novo estudante");
+			JLabel lblTabTitle = new JLabel("Categorias Recentes");
+			btnAdd = new JButton("Adicionar uma nova categoria");
 
 			btnAdd.addActionListener(
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						app.cardLayout.show(app.container, "EstudanteForm");
+						app.cardLayout.show(app.container, "CategoriaForm");
 					}
 				}
 			);
@@ -93,7 +105,7 @@ class EstudantesTabela extends JPanel
         		lblTabTitle.setFont(new Font("Arial", Font.BOLD, 16));
         		pnlTabela.add(norteBody, BorderLayout.NORTH);
 			
-			String colunas[] = {"ID", "Nome", "Nº BI.", "Acção"};
+			String colunas[] = {"ID", "Nome", "Acção"};
 			model = new DefaultTableModel(colunas, 0)
 			{
 				@Override
@@ -111,15 +123,14 @@ class EstudantesTabela extends JPanel
 					coluna = table.columnAtPoint(e.getPoint());
 					linha = table.rowAtPoint(e.getPoint());
 					
-					if(coluna == 3 && linha != -1)
+					if(coluna == 2 && linha != -1)
 					{
-						String idEstudante = table.getValueAt(linha, 0).toString();
-						String nomeEstudante = table.getValueAt(linha, 1).toString();
-						String biEstudante = table.getValueAt(linha, 2).toString();
+						String idCategoria = table.getValueAt(linha, 0).toString();
+						String nomeCategoria = table.getValueAt(linha, 1).toString();
 
-						app.container.add(new EstudanteForm(app, idEstudante, nomeEstudante, biEstudante), "EstudanteForm2");
+						app.container.add(new CategoriaForm(app, idCategoria, nomeCategoria), "CategoriaForm2");
 
-						app.cardLayout.show(app.container, "EstudanteForm2");
+						app.cardLayout.show(app.container, "CategoriaForm2");
 					}
 				}
 			});
@@ -147,28 +158,27 @@ class EstudantesTabela extends JPanel
 
 		    try
 		    {
-		        EstudanteModelo temp_model = new EstudanteModelo();
-			EstudanteFile file = new EstudanteFile(temp_model);
+		        CategoriaModelo temp_model = new CategoriaModelo();
+			CategoriaFile file = new CategoriaFile(temp_model);
 
 			//Total
-                        CategoriaFile cat_model_file = new CategoriaFile(new CategoriaModelo());
+                        EstudanteFile est_model_file = new EstudanteFile(new EstudanteModelo());
                         CertificadoFile cert_model_file = new CertificadoFile(new CertificadoModelo());
 
-                        pnlCards.removeAll();
-                        pnlCards.add(criarCardDash("Total de Certificados", String.valueOf(cert_model_file.getNregistos()), "+12% este mês"));
-                        pnlCards.add(criarCardDash("Alunos Cadastrados", String.valueOf(file.getNregistos()), "Ativos no sistema"));
-                        pnlCards.add(criarCardDash("Categorias Ativas", String.valueOf(cat_model_file.getNregistos()), "Operacionais"));
+			pnlCards.removeAll();
+			pnlCards.add(criarCardDash("Total de Certificados", String.valueOf(cert_model_file.getNregistos()), "+12% este mês"));
+			pnlCards.add(criarCardDash("Alunos Cadastrados", String.valueOf(est_model_file.getNregistos()), "Ativos no sistema"));
+			pnlCards.add(criarCardDash("Categorias Ativas", String.valueOf(file.getNregistos()), "Operacionais"));
 
 
-			List<EstudanteModelo> 	estudantes = file.listarEstudantesProntos();
+			List<CategoriaModelo> 	categorias = file.listarCategoriasProntas();
 
-			for (EstudanteModelo estudante : estudantes)
+			for (CategoriaModelo categoria : categorias)
 			{
 				model.addRow(
                                 	new Object[]{
-						estudante.id,
-                                    		estudante.nome.toStringEliminatingSpaces(),
-                                    		estudante.bi.toStringEliminatingSpaces(),
+						categoria.id,
+                                    		categoria.nome.toStringEliminatingSpaces(),
                                     		"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Editar</a></html>",
                                    	}
 
@@ -178,9 +188,16 @@ class EstudantesTabela extends JPanel
 
 
 		        //model.fireTableDataChanged();
+			//model.fireTableStructureChanged();
+			//table.removeAll();
 			model.fireTableDataChanged();
-                        this.revalidate();
-                        this.repaint();
+			this.revalidate();
+			this.repaint();
+
+			//Cards
+			//pnlCards.removeAll();
+                       	pnlCards.revalidate();
+                       	pnlCards.repaint();
 
 
 		    }
@@ -204,21 +221,20 @@ class EstudantesTabela extends JPanel
 
 			try
 			{
-				EstudanteModelo temp_model = new EstudanteModelo();
-				EstudanteFile file = new EstudanteFile(temp_model);
+				CategoriaModelo temp_model = new CategoriaModelo();
+				CategoriaFile file = new CategoriaFile(temp_model);
 
-				List<EstudanteModelo> estudantes = file.listarEstudantesProntos();
+				List<CategoriaModelo> categorias = file.listarCategoriasProntas();
 
-				for (EstudanteModelo estudante : estudantes) 
+				for (CategoriaModelo categoria : categorias)
 				{
-					String nomeCompleto = estudante.nome.toStringEliminatingSpaces();
+					String nomeCompleto = categoria.nome.toStringEliminatingSpaces();
 
 					if (nomeCompleto.toLowerCase().contains(termoBusca.toLowerCase().trim())) {
 						model.addRow(
 							new Object[]{
-								estudante.id,
+								categoria.id,
 								nomeCompleto,
-								estudante.bi.toStringEliminatingSpaces(),
 								"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Editar</a></html>",
 							}
 						);

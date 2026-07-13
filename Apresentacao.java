@@ -36,6 +36,7 @@ public class Apresentacao extends JFrame
 		//container.add(new EstudanteVisao(), "DASHBOARD");
 		container.add(new Form(this), "FORM");
 		container.add(new EstudanteForm(this), "EstudanteForm");
+		container.add(new CategoriaForm(this), "CategoriaForm");
 		this.add(container);
 
 		cardLayout.show(container, "MAIN");

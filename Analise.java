@@ -21,7 +21,7 @@ Data: 05.06.2026.
 3. Entidades
 	CertificadoModelo
 		int id;
-		String numeroCertificado, slug;
+		String nome, numeroCertificado, curso;
 		Date  dataInicioCurso, dataFimCurso, dataEmisao, dataValidade;
 
 	EstusanteModelo
@@ -31,7 +31,7 @@ Data: 05.06.2026.
 
 	CategoriaModelo
 		int id;
-		String categoria
+		String nome
 4. Persistência de Dados
 4.1 - Tabela de Apoio
 

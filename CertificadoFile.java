@@ -104,6 +104,127 @@ public class CertificadoFile extends ObjectsFile
     		return lista;
 
 	}
+
+	//Pesquisar pelo id
+        public CertificadoModelo pesquisarCertificadoPorId(int id)
+        {
+
+                try
+                {
+
+                        stream.seek( 4 );
+
+                        for (int i = 0; i < getNregistos(); i++)
+                        {
+                                CertificadoModelo temp_model = new CertificadoModelo();
+                                temp_model.read( stream );
+
+                                if (temp_model.getId() == id)
+                                        return temp_model;
+
+                        }
+                }
+                catch(IOException ex)
+                {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar Pesquisar os dados");
+                }
+
+                return null;
+
+        }
+
+	//Por nome
+        public CertificadoModelo pesquisarCertificadoPorNome(String nome)
+        {
+
+                try
+                {
+
+                        stream.seek( 4 );
+
+                        for (int i = 0; i < getNregistos(); i++)
+                        {
+                                CertificadoModelo temp_model = new CertificadoModelo();
+                                temp_model.read( stream );
+
+                                if (temp_model.getNome().equals(nome.trim()))
+                                        return temp_model;
+
+                        }
+                }
+                catch(IOException ex)
+                {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar Pesquisar os dados");
+                }
+
+                return null;
+
+        }
+
+	//Por processo
+        public CertificadoModelo pesquisarCertificadoPorProcesso(String nome)
+        {
+
+                try
+                {
+
+                        stream.seek( 4 );
+
+                        for (int i = 0; i < getNregistos(); i++)
+                        {
+                                CertificadoModelo temp_model = new CertificadoModelo();
+                                temp_model.read( stream );
+
+                                if (temp_model.getNumeroCertificado().equals(nome.trim()))
+                                        return temp_model;
+
+                        }
+                }
+                catch(IOException ex)
+                {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar Pesquisar os dados");
+                }
+
+                return null;
+
+        }
+
+
+	//Atualizar
+        public void atualizarDadosPorId(int id)
+        {
+                try
+                {
+                        stream.seek(4);
+
+                        for(int i = 0; i < getNregistos(); i++)
+                        {
+                                long posicao = stream.getFilePointer();
+
+                                CertificadoModelo temp_model = new CertificadoModelo();
+
+                                temp_model.read(stream);
+
+                                if(temp_model.getId() == id)
+                                {
+                                        stream.seek(posicao);
+                                        modelo.write(stream);
+                                        JOptionPane.showMessageDialog(null, "Registo do Estudante Atualizado com Sucesso");
+                                        break;
+                                }
+                        }
+
+                }
+                catch(IOException ex)
+                {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar registrar o estudante.");
+                }
+        }
+
 	
 	public void pesquisarCertificadoPeloNumeroCerificado(String nomeProcurado)
 	{

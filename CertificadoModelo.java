@@ -16,15 +16,16 @@ public class CertificadoModelo implements RegistGeneric
 {
 	//atributos
 	public int id;
-	public StringBufferModelo numeroCertificado, slug;
+	public StringBufferModelo nome, numeroCertificado, curso;
 	public DataModelo dataInicioCurso, dataFimCurso, dataEmissao, dataValidade;
 	
 	//constructores
 	public CertificadoModelo()
 	{
 		id = 0;
+		nome = new StringBufferModelo(50);
 		numeroCertificado = new StringBufferModelo(50);
-		slug = new StringBufferModelo(60);
+		curso = new StringBufferModelo(50);
 		dataInicioCurso = new DataModelo();
 		dataFimCurso = new DataModelo();
 		dataEmissao = new DataModelo();
@@ -32,8 +33,9 @@ public class CertificadoModelo implements RegistGeneric
 	}
 	public CertificadoModelo(
 		int id,
+		String nome,
                 String numeroCertificado,
-                String slug,
+		String curso,
                 String dataInicioCurso,
                 String dataFimCurso,
                 String dataEmissao,
@@ -42,8 +44,9 @@ public class CertificadoModelo implements RegistGeneric
 	)
 	{
 		this.id = id;
+		this.nome = new StringBufferModelo(nome, 50);
                 this.numeroCertificado = new StringBufferModelo(numeroCertificado, 50);
-                this.slug = new StringBufferModelo(slug, 60);
+		this.curso = new StringBufferModelo(curso, 50);
                 this.dataInicioCurso = new DataModelo(dataInicioCurso);
                 this.dataFimCurso = new DataModelo(dataFimCurso);
                 this.dataEmissao = new DataModelo(dataEmissao);
@@ -56,14 +59,18 @@ public class CertificadoModelo implements RegistGeneric
 	{
 		return id;
 	}
+	public String getNome()
+        {
+                return nome.toStringEliminatingSpaces();
+        }
 	public String getNumeroCertificado()
 	{
 		return numeroCertificado.toStringEliminatingSpaces();
 	}
-	public String getSlug()
-	{
-		return slug.toStringEliminatingSpaces();
-	}
+	public String getCurso()
+        {
+                return curso.toStringEliminatingSpaces();
+        }
 	public String getDataInicioCurso()
 	{
 		return dataInicioCurso.toString().trim();
@@ -85,14 +92,18 @@ public class CertificadoModelo implements RegistGeneric
 	{
 		this.id = newId;
 	}
+	public void setNome(String newNome)
+        {
+                this.nome = new StringBufferModelo(newNome, 50);
+        }
 	public void setNumeroCertificado(String newNumeroCertificado)
 	{
 		this.numeroCertificado = new StringBufferModelo(newNumeroCertificado, 50);
 	}
-	public void setSlug(String newSlug)
-	{
-		this.slug = new StringBufferModelo(newSlug, 60);
-	}
+	public void setCurso(String newCurso)
+        {
+                this.curso = new StringBufferModelo(newCurso, 50);
+        }
 	public void setDataInicioCurso(String newDataInicioCurso)
 	{
 		this.dataInicioCurso = new DataModelo(newDataInicioCurso);
@@ -116,7 +127,9 @@ public class CertificadoModelo implements RegistGeneric
 		String str = "Dados do Modelo Certificado\n\n";
 
 		str += "ID: " + this.getId() + "\n";
+		str += "Nome: " + this.getNome() + "\n";
 		str += "Número do Certificado: " + this.getNumeroCertificado() + "\n";
+		str += "Curso: " + this.getCurso() + "\n";
 		str += "Data de Início do Curso: " + getDataInicioCurso() + "\n";
 		str += "Data de Fim do Curso: " + getDataFimCurso() + "\n";
 		str += "Data de Emissão do Certificado: " + getDataEmissao() + "\n";
@@ -131,7 +144,7 @@ public class CertificadoModelo implements RegistGeneric
 		
 		try
 		{
-			sizeof = 4 + 100 + 120 + 12 + 12 + 12 + 12;
+			sizeof = 4 + 100 + 100 + 100 + 12 + 12 + 12 + 12;
 		}
 		catch(Exception ex)
 		{
@@ -147,8 +160,9 @@ public class CertificadoModelo implements RegistGeneric
 		try
                 {
                         stream.writeInt(id);
+			nome.write(stream);
 			numeroCertificado.write(stream);
-			slug.write(stream);
+			curso.write(stream);
 			dataInicioCurso.write(stream);
 			dataFimCurso.write(stream);
 			dataEmissao.write(stream);
@@ -166,8 +180,9 @@ public class CertificadoModelo implements RegistGeneric
                 try
                 {
                         id = stream.readInt();
+			nome.read(stream);
                         numeroCertificado.read(stream);
-                        slug.read(stream);
+			curso.read(stream);
                         dataInicioCurso.read(stream);
                         dataFimCurso.read(stream);
                         dataEmissao.read(stream);
@@ -186,5 +201,12 @@ public class CertificadoModelo implements RegistGeneric
 		CertificadoFile file = new CertificadoFile(this);
 		file.salvarDados();
 	}
+
+	public void atualizarDadosPorId(int id)
+        {
+                CertificadoFile file = new CertificadoFile(this);
+                file.atualizarDadosPorId(id);
+        }
+
 
 }

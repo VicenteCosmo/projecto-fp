@@ -97,7 +97,7 @@ class CertificadosTabela extends JPanel
         		lblTabTitle.setFont(new Font("Arial", Font.BOLD, 16));
         		pnlTabela.add(norteBody, BorderLayout.NORTH);
 			
-			String colunas[] = {"id", "Nome", "Nº Cert.", "Curso", "Início", "Fim", "Emissao", "Validade", "Atualizar"};
+			String colunas[] = {"id", "Nome", "Nº Cert.", "Curso", "Início", "Fim", "Emissao", "Validade", "Atualizar", "Visualizar"};
 			model = new DefaultTableModel(colunas, 0)
                         {
                                 @Override
@@ -132,6 +132,25 @@ class CertificadosTabela extends JPanel
 
                                                 app.cardLayout.show(app.container, "CertificadoForm2");
                                         }
+
+					
+					if(coluna == 9 && linha != -1)
+                                        {
+                                                String idCertificado = table.getValueAt(linha, 0).toString();
+                                                String nomeCertificado = table.getValueAt(linha, 1).toString();
+                                                String numCertificado = table.getValueAt(linha, 2).toString();
+                                                String cursoCertificado = table.getValueAt(linha, 3).toString();
+                                                String inicioCertificado = table.getValueAt(linha, 4).toString();
+                                                String fimCertificado = table.getValueAt(linha, 5).toString();
+                                                String emissaoCertificado = table.getValueAt(linha, 6).toString();
+                                                String validadeCertificado = table.getValueAt(linha, 7).toString();
+
+						app.container.add(new BaixarCertificado(app, idCertificado, nomeCertificado, cursoCertificado, numCertificado, inicioCertificado, fimCertificado, emissaoCertificado, validadeCertificado), "BaixarCertificado");
+						app.cardLayout.show(app.container, "BaixarCertificado");
+
+                                        }
+
+
                                 }
                         });
 
@@ -185,6 +204,7 @@ class CertificadosTabela extends JPanel
                                     		certificado.dataEmissao.toString(),
                                     		certificado.dataValidade.toString(),
 						"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Editar</a></html>",
+						"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Visualizar</a></html>",
                                    	}
                             	);
 
@@ -235,6 +255,7 @@ class CertificadosTabela extends JPanel
 			                                    		certificado.dataEmissao.toString(),
 			                                    		certificado.dataValidade.toString(),
 									"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Editar</a></html>",
+									"<html><a href='' style='color: #1e90ff; font-weight: bold; text-decoration: none;'>Visualizar</a></html>",
 							}
 						);
 					}

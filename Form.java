@@ -13,6 +13,8 @@ import java.io.RandomAccessFile;
 import java.io.IOException;
 import java.util.List;
 
+import Calendario.*;
+
 public class Form extends JPanel implements ActionListener
 {
 
@@ -25,10 +27,13 @@ public class Form extends JPanel implements ActionListener
 	private JComboBox<String> nome;
         private JTextField numeroCertificado;
     	private JComboBox<String> curso;
-        private JTextField dataInicioCurso;
-     	private JTextField dataFimCurso;
-      	private JTextField dataEmissao;
-       	private JTextField dataValidade;
+        
+	private JTextFieldData dataInicioCurso;
+     	private JTextFieldData dataFimCurso;
+      	private JTextFieldData dataEmissao;
+       	private JTextFieldData dataValidade;
+
+	//private JTextFieldData txtData;
 
 	private CertificadoFile file;
 	private Apresentacao app;
@@ -104,32 +109,52 @@ public class Form extends JPanel implements ActionListener
         	}
 
 		//Campo Data de Início
-                JLabel dataInicioCursoLb = new JLabel("Data de Fim", SwingConstants.RIGHT);
+                JLabel dataInicioCursoLb = new JLabel("Data de Início", SwingConstants.RIGHT);
                 dataInicioCursoLb.setFont(font);
                 dataInicioCursoLb.setForeground(Color.decode("#2d3436"));
-                dataInicioCurso = new JTextField(15);
-                dataInicioCurso.setFont(font);
+                
+		JPanel painelData1 = new JPanel( new GridLayout(1, 1) );
+		dataInicioCurso = new JTextFieldData("Inicio");
+                dataInicioCurso.getDTestField().setFont(font);
+		
+		painelData1.add( dataInicioCurso.getDTestField() );
+                painelData1.add( dataInicioCurso.getDButton() );
 		
 		//Campo Data de Término
-                JLabel dataFimCursoLb = new JLabel("Data de Início", SwingConstants.RIGHT);
+                JLabel dataFimCursoLb = new JLabel("Data de Fim", SwingConstants.RIGHT);
                 dataFimCursoLb.setFont(font);
                 dataFimCursoLb.setForeground(Color.decode("#2d3436"));
-                dataFimCurso = new JTextField(15);
-                dataFimCurso.setFont(font);
+
+		JPanel painelData2 = new JPanel( new GridLayout(1, 1) );
+                dataFimCurso = new JTextFieldData("Fim");
+		dataFimCurso.getDTestField().setFont(font);
+
+                painelData2.add( dataFimCurso.getDTestField() );
+                painelData2.add( dataFimCurso.getDButton() );
 
 		//Campo da data de emissão
                 JLabel dataEmissaoLb = new JLabel("Data de Emissão", SwingConstants.RIGHT);
                 dataEmissaoLb.setFont(font);
                 dataEmissaoLb.setForeground(Color.decode("#2d3436"));
-                dataEmissao = new JTextField(15);
-                dataEmissao.setFont(font);
-		
+
+		JPanel painelData3 = new JPanel( new GridLayout(1, 1) );
+                dataEmissao = new JTextFieldData("Emissao");
+                dataEmissao.getDTestField().setFont(font);
+
+                painelData3.add( dataEmissao.getDTestField() );
+                painelData3.add( dataEmissao.getDButton() );
+
 		//Campo da data de validade
                 JLabel dataValidadeLb = new JLabel("Data de Validade", SwingConstants.RIGHT);
                 dataValidadeLb.setFont(font);
                 dataValidadeLb.setForeground(Color.decode("#2d3436"));
-                dataValidade = new JTextField(15);
-                dataValidade.setFont(font);
+
+		JPanel painelData4 = new JPanel( new GridLayout(1, 1) );
+                dataValidade = new JTextFieldData("Validade");
+                dataValidade.getDTestField().setFont(font);
+
+                painelData4.add( dataValidade.getDTestField() );
+                painelData4.add( dataValidade.getDButton() );
 
                 //Botao
                 btnSalvar = new JButton("Salvar");
@@ -206,7 +231,7 @@ public class Form extends JPanel implements ActionListener
 
                 gbc.gridx = 1; gbc.gridy = 4;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(dataInicioCurso, gbc);
+                container.add(painelData1, gbc);
 
 		//L 5
                 gbc.gridx = 0; gbc.gridy = 5;
@@ -215,7 +240,7 @@ public class Form extends JPanel implements ActionListener
 
                 gbc.gridx = 1; gbc.gridy = 5;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(dataFimCurso, gbc);
+                container.add(painelData2, gbc);
 
 		//L 6
                 gbc.gridx = 0; gbc.gridy = 6;
@@ -224,7 +249,7 @@ public class Form extends JPanel implements ActionListener
 
                 gbc.gridx = 1; gbc.gridy = 6;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(dataEmissao, gbc);
+                container.add(painelData3, gbc);
 
 		//L 7
                 gbc.gridx = 0; gbc.gridy = 7;
@@ -233,7 +258,7 @@ public class Form extends JPanel implements ActionListener
 
                 gbc.gridx = 1; gbc.gridy = 7;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(dataValidade, gbc);
+                container.add(painelData4, gbc);
 
                 gbc.gridx = 0; gbc.gridy = 11;
                 gbc.gridwidth = 2;
@@ -264,10 +289,10 @@ public class Form extends JPanel implements ActionListener
                 this.nome.setSelectedItem(nome);
                 this.numeroCertificado.setText(numeroCertificado);
 		this.curso.setSelectedItem(curso);
-		this.dataInicioCurso.setText(dataInicioCurso);
-		this.dataFimCurso.setText(dataFimCurso);
-		this.dataEmissao.setText(dataEmissao);
-		this.dataValidade.setText(dataValidade);
+		this.dataInicioCurso.getDTestField().setText(dataInicioCurso);
+		this.dataFimCurso.getDTestField().setText(dataFimCurso);
+		this.dataEmissao.getDTestField().setText(dataEmissao);
+		this.dataValidade.getDTestField().setText(dataValidade);
 
                 this.btnSalvar.setText("Atualizar");
         }
@@ -284,15 +309,17 @@ public class Form extends JPanel implements ActionListener
 		
 		CertificadoModelo modelo = new CertificadoModelo();
 
+		//String testData = txtData.getDTestField().getText();
 		
 		modelo.setId(idInt);
 		modelo.setNome(nomeSelecionado);
 		modelo.setNumeroCertificado(this.numeroCertificado.getText());
 		modelo.setCurso(cursoSelecionado);
-		modelo.setDataInicioCurso(this.dataInicioCurso.getText());
-		modelo.setDataFimCurso(this.dataFimCurso.getText());
-		modelo.setDataEmissao(this.dataEmissao.getText());
-		modelo.setDataValidade(this.dataValidade.getText());
+
+		modelo.setDataInicioCurso(this.dataInicioCurso.getDTestField().getText());
+		modelo.setDataFimCurso(this.dataFimCurso.getDTestField().getText());
+		modelo.setDataEmissao(this.dataEmissao.getDTestField().getText());
+		modelo.setDataValidade(this.dataValidade.getDTestField().getText());
 
 		//Dados da pesquisa
 		CertificadoFile eFile = new CertificadoFile(modelo);
@@ -307,13 +334,13 @@ public class Form extends JPanel implements ActionListener
 				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o número do certificado!");
 			else if(cursoSelecionado.trim().isEmpty())
 				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o curso!");
-			else if(dataInicioCurso.getText().trim().isEmpty())
+			else if(dataInicioCurso.getDTestField().getText().trim().isEmpty())
 				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de início do curso!");
-			else if(dataFimCurso.getText().trim().isEmpty())
+			else if(dataFimCurso.getDTestField().getText().trim().isEmpty())
 				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de fim do curso!");
-			else if(dataEmissao.getText().trim().isEmpty())
+			else if(dataEmissao.getDTestField().getText().trim().isEmpty())
 				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de emissão do certificado!");
-			else if(dataValidade.getText().trim().isEmpty())
+			else if(dataValidade.getDTestField().getText().trim().isEmpty())
 				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu a data de validade do certificado!");
 			else
 			{
@@ -328,10 +355,10 @@ public class Form extends JPanel implements ActionListener
 				}
 				else if("Atualizar".equals(btnText))
 				{
-					if(result == null)
+					//if(result == null)
 						modelo.atualizarDadosPorId(idInt);
-					else
-						JOptionPane.showMessageDialog(null, "Certificado já registrado. \n" + "Por favor, registre um novo certificado!");
+					//else
+					//	JOptionPane.showMessageDialog(null, "Certificado já registrado. \n" + "Por favor, registre um novo certificado!");
 
 				}
 

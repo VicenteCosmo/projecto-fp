@@ -132,9 +132,11 @@ public class BaixarCertificado extends JPanel
         btnBaixar.setBackground(new Color(30, 144, 255));
         btnBaixar.setForeground(Color.WHITE);
         btnBaixar.setFocusPainted(false);
+	btnBaixar.setIcon(new ImageIcon("image/add_doc.png"));
 
         btnVoltar = new JButton("Voltar");
         btnVoltar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+	btnVoltar.setIcon(new ImageIcon("image/cancel24.png"));
 
         pnlAcoes.add(btnBaixar);
         pnlAcoes.add(btnVoltar);

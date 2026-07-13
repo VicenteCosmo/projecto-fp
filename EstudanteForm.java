@@ -2,7 +2,7 @@
 Projecto de Fundamentos de Programação II;
 Tema: Sistema de Gestão Certificados;
 Nome: Viente Cosmo, N. 36479;
-File Name: Form.java;
+File Name: EStudanteForm.java;
 Data: 05.06.2026.
 *****************************************************************/
 
@@ -40,6 +40,17 @@ public class EstudanteForm extends JPanel implements ActionListener
                 //Font
                 Font font = new Font("Segoe UI", Font.PLAIN, 20);
 
+                JLabel lblLogo = new JLabel();
+                lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
+                try {
+                        ImageIcon logoIcon = new ImageIcon("image/certificate-icon.png");
+                        Image img = logoIcon.getImage();
+                        Image novaImg = img.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+                        lblLogo.setIcon(new ImageIcon(novaImg));
+                } catch(Exception e) {
+                        System.out.println("Aviso: Não foi possível carregar o logótipo.");
+                }
+
                 //Campo nome
                 JLabel idLb = new JLabel("ID", SwingConstants.RIGHT);
                 idLb.setFont(font);
@@ -67,6 +78,8 @@ public class EstudanteForm extends JPanel implements ActionListener
 
                 //Botao
                 btnSalvar = new JButton("Salvar");
+                btnSalvar.setMnemonic(KeyEvent.VK_G);
+                btnSalvar.setToolTipText("Pressione ALT + G para salvar ou atualizar os dados");
                 btnSalvar.setFocusPainted(false);
                 btnSalvar.setBorderPainted(false);
                 btnSalvar.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -92,40 +105,82 @@ public class EstudanteForm extends JPanel implements ActionListener
                 );
                 //btn.setPreferredSize(new Dimension(5, 20));
 
+                JButton btnJanelaAtalhos = new JButton("Atalhos");
+                btnJanelaAtalhos.setMnemonic(KeyEvent.VK_H);
+                btnJanelaAtalhos.setToolTipText("Pressione ALT + H para ver todos os atalhos disponíveis");
+                btnJanelaAtalhos.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                btnJanelaAtalhos.addActionListener(e -> app.mostrarJanelaAtalhos(this));
+
+                JButton btnJanelaVoltar = new JButton("Voltar");
+                btnJanelaVoltar.setMnemonic(KeyEvent.VK_V);
+                btnJanelaVoltar.setToolTipText("Pressione ALT + V para voltar ao ecrã anterior");
+                btnJanelaVoltar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                btnJanelaVoltar.setBackground(Color.decode("#ff7675"));
+                btnJanelaVoltar.addActionListener(e ->
+			{ 
+				this.revalidate();
+				this.repaint();
+				app.cardLayout.show(app.container, "DASHBOARD");
+			}
+		);
+
+                try {
+                        btnJanelaAtalhos.setIcon(new ImageIcon("image/edit24.png"));
+                        btnJanelaVoltar.setIcon(new ImageIcon("image/cancel24.png"));
+                        btnSalvar.setIcon(new ImageIcon("image/edit24.png"));
+                } catch(Exception e) {}
+
+                JPanel pnlBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+                pnlBotoes.setOpaque(false);
+                pnlBotoes.add(btnSalvar);
+                pnlBotoes.add(btnJanelaAtalhos);
+                pnlBotoes.add(btnJanelaVoltar);
+
                 //Configuara as posicoes L 0
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.insets = new Insets(8, 8, 8, 8);
 
                 gbc.gridx = 0; gbc.gridy = 0;
+                gbc.gridwidth = 2;
+                gbc.anchor = GridBagConstraints.CENTER;
+                gbc.fill = GridBagConstraints.NONE;
+                gbc.insets = new Insets(0, 8, 20, 8);
+                container.add(lblLogo, gbc);
+
+                gbc.gridwidth = 1;
+                gbc.insets = new Insets(8, 8, 8, 8);
+
+                gbc.gridx = 0; gbc.gridy = 1;
                 //gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0;
                 container.add(idLb, gbc);
 
                 //
-                gbc.gridx = 1; gbc.gridy = 0;
+                gbc.gridx = 1; gbc.gridy = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 container.add(id, gbc);
 
 		//L 1
-                gbc.gridx = 0; gbc.gridy = 1;
+                gbc.gridx = 0; gbc.gridy = 2;
                 container.add(numCertificadoLb, gbc);
 
-                gbc.gridx = 1; gbc.gridy = 1;
+                gbc.gridx = 1; gbc.gridy = 2;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
                 container.add(nome, gbc);
 
 		//L 2
-                gbc.gridx = 0; gbc.gridy = 2;
+                gbc.gridx = 0; gbc.gridy = 3;
                 container.add(slugLb, gbc);
 
-                gbc.gridx = 1; gbc.gridy = 2;
+                gbc.gridx = 1; gbc.gridy = 3;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
                 container.add(bi, gbc);
 
-                gbc.gridx = 0; gbc.gridy = 4;
+                gbc.gridx = 0; gbc.gridy = 5;
                 gbc.gridwidth = 2;
                 gbc.anchor = GridBagConstraints.CENTER;
-                container.add(btnSalvar, gbc);
+                gbc.fill = GridBagConstraints.NONE;
+                container.add(pnlBotoes, gbc);
 
 		//container.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
                 container.setOpaque(false);
@@ -134,7 +189,7 @@ public class EstudanteForm extends JPanel implements ActionListener
 
                 //
                 GridBagConstraints gbcMain = new GridBagConstraints();
-                gbcMain.insets = new Insets(150, 150, 150, 150);
+                gbcMain.insets = new Insets(100, 100, 100, 100);
 
                 this.setBackground(Color.decode("#d0e3fb"));
                 this.add(container, gbcMain);
@@ -208,6 +263,3 @@ public class EstudanteForm extends JPanel implements ActionListener
         }
 
 }
-
-
-

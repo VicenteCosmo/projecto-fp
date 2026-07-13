@@ -37,6 +37,8 @@ public class Apresentacao extends JFrame
 		container.add(new Form(this), "FORM");
 		container.add(new EstudanteForm(this), "EstudanteForm");
 		container.add(new CategoriaForm(this), "CategoriaForm");
+		container.add(new PasswordForm(this), "PasswordForm");
+
 		this.add(container);
 
 		cardLayout.show(container, "MAIN");
@@ -45,6 +47,35 @@ public class Apresentacao extends JFrame
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+	}
+	
+	//Exibe a caixa de diálogo com as instruções dos atalhos
+	public void mostrarJanelaAtalhos(Component pai) {
+		String textoAjuda = "GUIA DE TECLAS DE ATALHO DO SISTEMA\n\n" +
+				"• [ALT + H]  - Mostrar esta tela de ajuda\n" +
+				"• [ALT + S]  - Fechar / Sair do Sistema (Exit)\n" +
+				"• [ALT + E]  - Botão 'Entrar' (Ecrã Inicial)\n" +
+				"• [ALT + C]  - Botão 'Começar Agora' (Ecrã Inicial)\n\n" +
+				"  Ecrã de Login:\n" +
+				"• [ALT + E]  - Executar autenticação no sistema\n" +
+				"• [ALT + R]  - Redirecionar para Recuperar Senha\n\n" +
+				"  Ecrã de Recuperação de Palavra-Passe:\n" +
+				"• [ALT + C]  - Cancelar operação e retornar";
+
+		JOptionPane.showMessageDialog(pai, textoAjuda, "Mapeamento de Atalhos (Mnemónicos)", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	// 2. Executa o encerramento seguro do aplicativo inteiro
+	public void fecharSistemaConfirmando(Component pai) {
+		int resposta = JOptionPane.showConfirmDialog(pai, 
+			"Tem a certeza de que deseja encerrar a aplicação?", 
+			"Sair do Sistema", 
+			JOptionPane.YES_NO_OPTION, 
+			JOptionPane.QUESTION_MESSAGE);
+			
+		if (resposta == JOptionPane.YES_OPTION) {
+			System.exit(0);
+		}
 	}
 
 
@@ -58,6 +89,9 @@ public class Apresentacao extends JFrame
 
 		JButton btnEntrar;
 		JButton btnBody;
+		
+		JButton btnAjudaAtalhos;
+		JButton btnSairSistema;
 
 		public PainelApresentacao()
 		{
@@ -79,12 +113,37 @@ public class Apresentacao extends JFrame
 			logoLb.setHorizontalAlignment(SwingConstants.LEFT);
 
 			JPanel navbar = new JPanel();
-			navbar.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 35));
+			navbar.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 35));
+			
+			// Inicialização do botão de atalhos (Com atalho ALT + H)
+			btnAjudaAtalhos = new JButton("Atalhos");
+			btnAjudaAtalhos.setMnemonic(KeyEvent.VK_H); 
+			btnAjudaAtalhos.setToolTipText("Pressione ALT + H para ver os atalhos");
+			btnAjudaAtalhos.setFocusPainted(false);
+			btnAjudaAtalhos.addActionListener(this);
+			
+			btnSairSistema = new JButton("Sair");
+			btnSairSistema.setMnemonic(KeyEvent.VK_S); 
+			btnSairSistema.setToolTipText("Pressione ALT + S para fechar o programa");
+			btnSairSistema.setFocusPainted(false);
+			btnSairSistema.setBackground(Color.decode("#ff7675"));
+			btnSairSistema.addActionListener(this);
 			
 			btnEntrar = new JButton("Entrar");
+			btnEntrar.setMnemonic(KeyEvent.VK_E); 
+			btnEntrar.setToolTipText("Pressione ALT + E para aceder ao login");
 			btnEntrar.setFocusPainted(false);
 			btnEntrar.addActionListener(this);
 			
+			try {
+				btnAjudaAtalhos.setIcon(new ImageIcon("image/edit24.png")); 
+				btnSairSistema.setIcon(new ImageIcon("image/cancel24.png")); 
+			} catch(Exception e) {
+				System.out.println("Aviso: Falha ao carregar ícones da navbar.");
+			}
+			
+			navbar.add(btnAjudaAtalhos);
+			navbar.add(btnSairSistema);
 			navbar.add(btnEntrar);
 
 			//Add items to header
@@ -118,6 +177,8 @@ public class Apresentacao extends JFrame
 			bodyBox.add(lb2);
 
 			btnBody = new JButton("Começar Agora");
+			btnBody.setMnemonic(KeyEvent.VK_C);
+			btnBody.setToolTipText("Pressione ALT + C para iniciar");
 			btnBody.setBorder(BorderFactory.createLineBorder(Color.decode("#25447b"), 20));
 			btnBody.setFocusPainted(false);
 			btnBody.setBorder(new EmptyBorder(30, 20, 30, 20));
@@ -151,6 +212,17 @@ public class Apresentacao extends JFrame
 		
 		public void actionPerformed(ActionEvent e)
 		{
+			// Ouvintes para chamadas globais
+			if (e.getSource() == btnAjudaAtalhos) {
+				mostrarJanelaAtalhos(this);
+				return;
+			}
+			
+			if (e.getSource() == btnSairSistema) {
+				fecharSistemaConfirmando(this);
+				return;
+			}
+
 			if(e.getSource() == btnEntrar || e.getSource() == btnBody)
 				cardLayout.show(container, "LOGIN");
 		}

@@ -56,12 +56,26 @@ class EstudantesTabela extends JPanel
 		
 			JLabel lblTabTitle = new JLabel("EStudantes Recentes");
 			btnAdd = new JButton("Adicionar um novo estudante");
+			btnAdd.setMnemonic(KeyEvent.VK_N);
+			btnAdd.setToolTipText("Pressione ALT + N para adicionar um novo estudante");
+
+			try 
+			{
+				btnAdd.setIcon(new ImageIcon("image/edit24.png"));
+			} 
+			catch(Exception e) 
+			{}
 
 			btnAdd.addActionListener(
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
 					{
+						
+						EstudanteForm form = new EstudanteForm(app);
+						form.revalidate();
+						form.repaint();
+						app.container.add(form, "EstudanteForm");
 						app.cardLayout.show(app.container, "EstudanteForm");
 					}
 				}
@@ -70,6 +84,16 @@ class EstudantesTabela extends JPanel
 			// Pesquisa
 			txtPesquisa = new JTextField(15);
 			btnPesquisar = new JButton("Pesquisar");
+			btnPesquisar.setMnemonic(KeyEvent.VK_P);
+			btnPesquisar.setToolTipText("Pressione ALT + P para pesquisar");
+
+			try 
+                        {
+                         	btnPesquisar.setIcon(new ImageIcon("image/search32.png"));
+                        } 
+                        catch(Exception e) 
+                        {}
+
 
 			// Filtra usando o texto digitado
 			btnPesquisar.addActionListener(new ActionListener() {
@@ -240,7 +264,7 @@ class EstudantesTabela extends JPanel
 		        card.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		         
 		        JLabel lblTit = new JLabel(titulo);
-			 lblTit.setForeground(Color.GRAY);
+			lblTit.setForeground(Color.GRAY);
 		        lblTit.setFont(new Font("Arial", Font.PLAIN, 12));
 		        
 		        JLabel lblVal = new JLabel(valor);

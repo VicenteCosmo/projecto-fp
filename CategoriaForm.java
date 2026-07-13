@@ -19,6 +19,7 @@ public class CategoriaForm extends JPanel implements ActionListener
         private JTextField nomeF;
         private JPasswordField passwordF;
 	private JButton btnSalvar;
+	private JButton btnVoltar;
 
 	private JTextField id;
         private JTextField nome;
@@ -38,6 +39,14 @@ public class CategoriaForm extends JPanel implements ActionListener
 		file = new CategoriaFile(new CategoriaModelo());
                 //Font
                 Font font = new Font("Segoe UI", Font.PLAIN, 20);
+
+		JLabel logoLb = new JLabel();
+		
+		ImageIcon logoIcon = new ImageIcon("image/certificate-icon.png");
+            
+            	Image img = logoIcon.getImage();
+            	Image novaImg = img.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+            	logoLb.setIcon(new ImageIcon(novaImg));
 
                 //Campo nome
                 JLabel idLb = new JLabel("ID", SwingConstants.RIGHT);
@@ -59,6 +68,10 @@ public class CategoriaForm extends JPanel implements ActionListener
 
                 //Botao
                 btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon("image/edit24.png"));
+
+		btnSalvar.setMnemonic(KeyEvent.VK_S);
+		btnSalvar.setToolTipText("Pressione ALT + S para salvar os dados");
                 btnSalvar.setFocusPainted(false);
                 btnSalvar.setBorderPainted(false);
                 btnSalvar.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -84,32 +97,73 @@ public class CategoriaForm extends JPanel implements ActionListener
                 );
                 //btn.setPreferredSize(new Dimension(5, 20));
 
+		btnVoltar = new JButton("Voltar");
+		btnVoltar.setIcon(new ImageIcon("image/cancel24.png"));
+
+		btnVoltar.setMnemonic(KeyEvent.VK_V);
+		btnVoltar.setToolTipText("Pressione ALT + V para voltar à tela anterior");
+		btnVoltar.setFocusPainted(false);
+		btnVoltar.setBorderPainted(false);
+		btnVoltar.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		btnVoltar.setBackground(Color.decode("#d0e3fb"));
+
+		btnVoltar.addActionListener(this);
+		btnVoltar.addMouseListener(
+				new MouseAdapter()
+				{
+						@Override
+						public void mouseEntered(MouseEvent e)
+						{
+								btnVoltar.setBackground(Color.WHITE);
+								btnVoltar.setFont(new Font("Segoe UI", Font.PLAIN, 22));
+						}
+						public void mouseExited(MouseEvent e)
+						{
+								btnVoltar.setFont(new Font("Segoe UI", Font.BOLD, 20));
+								btnVoltar.setBackground(Color.decode("#d0e3fb"));
+						}
+				}
+		);
+
                 //Configuara as posicoes L 0
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.insets = new Insets(8, 8, 8, 8);
 
-                gbc.gridx = 0; gbc.gridy = 0;
+		gbc.gridx = 0; gbc.gridy = 0;
+		gbc.gridwidth = 2;
+		gbc.anchor = GridBagConstraints.CENTER;
+		container.add(logoLb, gbc);
+
+                gbc.gridx = 0; gbc.gridy = 1;
+				gbc.gridwidth = 1;
                 //gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0;
                 container.add(idLb, gbc);
 
                 //
-                gbc.gridx = 1; gbc.gridy = 0;
+                gbc.gridx = 1; gbc.gridy = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 container.add(id, gbc);
 
 		//L 1
-                gbc.gridx = 0; gbc.gridy = 1;
+                gbc.gridx = 0; gbc.gridy = 2;
+				gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0;
                 container.add(numCertificadoLb, gbc);
 
-                gbc.gridx = 1; gbc.gridy = 1;
+                gbc.gridx = 1; gbc.gridy = 2;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
                 container.add(nome, gbc);
+
+		JPanel pnlBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		pnlBotoes.setOpaque(false);
+		pnlBotoes.add(btnSalvar);
+		pnlBotoes.add(btnVoltar);
 
                 gbc.gridx = 0; gbc.gridy = 4;
                 gbc.gridwidth = 2;
                 gbc.anchor = GridBagConstraints.CENTER;
-                container.add(btnSalvar, gbc);
+				gbc.fill = GridBagConstraints.NONE;
+                container.add(pnlBotoes, gbc);
 
 		//container.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
                 container.setOpaque(false);
@@ -133,11 +187,18 @@ public class CategoriaForm extends JPanel implements ActionListener
 		this.nome.setText(nome);
 
 		this.btnSalvar.setText("Atualizar");
+		this.btnSalvar.setMnemonic(KeyEvent.VK_A);
+		this.btnSalvar.setToolTipText("Pressione ALT + A para atualizar os dados");
 	}
 
         public void actionPerformed(ActionEvent e)
         {
                 //Apresentacao app = new Apresentacao();
+
+		if (e.getSource() == btnVoltar) {
+			app.cardLayout.show(app.container, "DASHBOARD");
+			return;
+		}
 
 		//Instanciar o modelo
 		
@@ -191,6 +252,3 @@ public class CategoriaForm extends JPanel implements ActionListener
         }
 
 }
-
-
-

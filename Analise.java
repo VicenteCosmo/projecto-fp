@@ -26,19 +26,23 @@ Data: 05.06.2026.
 
 	EstusanteModelo
 		int id;
-		String nome;
-		Date dataNascimento, numeroBI;
+		String nome, numeroBI;
 
 	CategoriaModelo
 		int id;
 		String nome
-4. Persistência de Dados
-4.1 - Tabela de Apoio
+3.1 Adicional
+	AutenticacaoModelo
+		int id;
+		Strong nome, password;
 
-4.2 - Ficheiro de Dados
+4. Persistência de Dados
+
+4.1 - Ficheiro de Dados
 ^	Certificados.DAT
 	Estudante.DAT
-	
+	Categorias.DAT
+	Autenticacao.DAT
 
 4.3 - IMplementação
 	Linguagem de Programação - Jva (Swing);

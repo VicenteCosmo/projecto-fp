@@ -12,7 +12,6 @@ import java.awt.event.*;
 import java.io.RandomAccessFile;
 import java.io.IOException;
 import java.util.List;
-
 import Calendario.*;
 
 public class Form extends JPanel implements ActionListener
@@ -27,7 +26,7 @@ public class Form extends JPanel implements ActionListener
 	private JComboBox<String> nome;
         private JTextField numeroCertificado;
     	private JComboBox<String> curso;
-        
+        	
 	private JTextFieldData dataInicioCurso;
      	private JTextFieldData dataFimCurso;
       	private JTextFieldData dataEmissao;
@@ -79,6 +78,14 @@ public class Form extends JPanel implements ActionListener
                 {
                         EstudanteFile estFile = new EstudanteFile(new EstudanteModelo());
                         List<EstudanteModelo> estudantes = estFile.listarEstudantesProntos();
+
+			/*if(estudantes.isEmpty())
+                        { 
+                                JOptionPane.showMessageDialog(null, "Sem registro de estudantes. \nPor favor, adicione algum registro!");
+                                app.cardLayout.show(app.container, "EstudanteForm");
+                                return;
+                        }*/
+
                         for (EstudanteModelo est : estudantes) {
                                 nome.addItem(est.nome.toStringEliminatingSpaces()); 
                 }
@@ -99,6 +106,14 @@ public class Form extends JPanel implements ActionListener
 		{
             		CategoriaFile catFile = new CategoriaFile(new CategoriaModelo());
             		List<CategoriaModelo> cats = catFile.listarCategoriasProntas();
+
+			/*if(cats.isEmpty())
+			{
+				JOptionPane.showMessageDialog(null, "Sem registro de categorias. \nPor favor, adicione algum registro!");
+				app.cardLayout.show(app.container, "CategoriaForm");
+				return;
+			}*/
+
             		for (CategoriaModelo cat : cats) {
                 		curso.addItem(cat.nome.toStringEliminatingSpaces());
             	}
@@ -158,6 +173,8 @@ public class Form extends JPanel implements ActionListener
 
                 //Botao
                 btnSalvar = new JButton("Salvar");
+                btnSalvar.setMnemonic(KeyEvent.VK_G);
+                btnSalvar.setToolTipText("Pressione ALT + G para guardar ou atualizar os dados");
                 btnSalvar.setFocusPainted(false);
                 btnSalvar.setBorderPainted(false);
                 btnSalvar.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -183,151 +200,164 @@ public class Form extends JPanel implements ActionListener
                 );
                 //btn.setPreferredSize(new Dimension(5, 20));
 
+                JButton btnJanelaAtalhos = new JButton("Atalhos");
+                btnJanelaAtalhos.setMnemonic(KeyEvent.VK_H);
+                btnJanelaAtalhos.setToolTipText("Pressione ALT + H para ver todos os atalhos disponíveis");
+                btnJanelaAtalhos.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                btnJanelaAtalhos.addActionListener(e -> app.mostrarJanelaAtalhos(this));
+
+                JButton btnJanelaVoltar = new JButton("Voltar");
+                btnJanelaVoltar.setMnemonic(KeyEvent.VK_V);
+                btnJanelaVoltar.setToolTipText("Pressione ALT + V para voltar ao ecrã anterior");
+                btnJanelaVoltar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                btnJanelaVoltar.setBackground(Color.decode("#ff7675"));
+                btnJanelaVoltar.addActionListener(e -> app.cardLayout.show(app.container, "DASHBOARD"));
+
+                try {
+                        btnJanelaAtalhos.setIcon(new ImageIcon("image/edit24.png"));
+                        btnJanelaVoltar.setIcon(new ImageIcon("image/cancel24.png"));
+                        btnSalvar.setIcon(new ImageIcon("image/edit24.png"));
+                } catch(Exception e) {}
+
+                JPanel pnlBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+                pnlBotoes.add(btnSalvar);
+                pnlBotoes.add(btnJanelaAtalhos);
+                pnlBotoes.add(btnJanelaVoltar);
+
                 //Configuara as posicoes L 0
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.insets = new Insets(4, 8, 4, 8);
 
+                JLabel logoLb = new JLabel();
+
+                ImageIcon logoIcon = new ImageIcon("image/certificate-icon.png");
+            
+            	Image img = logoIcon.getImage();
+            	Image novaImg = img.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+            	logoLb.setIcon(new ImageIcon(novaImg));
+
                 gbc.gridx = 0; gbc.gridy = 0;
+                gbc.gridwidth = 2;
+                gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+                gbc.anchor = GridBagConstraints.CENTER;
+                container.add(logoLb, gbc);
+
+                gbc.gridwidth = 1;
+                gbc.gridx = 0; gbc.gridy = 1;
                 gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
                 container.add(idLb, gbc);
 
                 //
-                gbc.gridx = 1; gbc.gridy = 0;
+                gbc.gridx = 1; gbc.gridy = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 container.add(id, gbc);
 
 		//L 1, nome
-                gbc.gridx = 0; gbc.gridy = 1;
+                gbc.gridx = 0; gbc.gridy = 2;
 		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
                 container.add(nomeLb, gbc);
 
-                gbc.gridx = 1; gbc.gridy = 1;
+                gbc.gridx = 1; gbc.gridy = 2;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
                 container.add(nome, gbc);
 		
 		//L 2
-                gbc.gridx = 0; gbc.gridy = 2;
+                gbc.gridx = 0; gbc.gridy = 3;
 		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
                 container.add(numCertificadoLb, gbc);
 
-                gbc.gridx = 1; gbc.gridy = 2;
-                gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(numeroCertificado, gbc);
-		
-		//L 3
-                gbc.gridx = 0; gbc.gridy = 3;
-		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
-                container.add(cursoLb, gbc);
-
                 gbc.gridx = 1; gbc.gridy = 3;
                 gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(curso, gbc);
-		
+                container.add(numeroCertificado, gbc);
+
+		//L 3
+		gbc.gridx = 0; gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
+		container.add(cursoLb, gbc);
+		gbc.gridx = 1; gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+		container.add(curso, gbc);
 		//L 4
-                gbc.gridx = 0; gbc.gridy = 4;
+		gbc.gridx = 0; gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
-                container.add(dataInicioCursoLb, gbc);
-
-                gbc.gridx = 1; gbc.gridy = 4;
-                gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(painelData1, gbc);
-
+		container.add(dataInicioCursoLb, gbc);
+		gbc.gridx = 1; gbc.gridy = 5;
+		gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+		container.add(painelData1, gbc);
 		//L 5
-                gbc.gridx = 0; gbc.gridy = 5;
+		gbc.gridx = 0; gbc.gridy = 6;
 		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
-                container.add(dataFimCursoLb, gbc);
-
-                gbc.gridx = 1; gbc.gridy = 5;
-                gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(painelData2, gbc);
-
+		container.add(dataFimCursoLb, gbc);
+		gbc.gridx = 1; gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+		container.add(painelData2, gbc);
 		//L 6
-                gbc.gridx = 0; gbc.gridy = 6;
+		gbc.gridx = 0; gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
-                container.add(dataEmissaoLb, gbc);
-
-                gbc.gridx = 1; gbc.gridy = 6;
-                gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(painelData3, gbc);
-
+		container.add(dataEmissaoLb, gbc);
+		gbc.gridx = 1; gbc.gridy = 7;
+		gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+		container.add(painelData3, gbc);
 		//L 7
-                gbc.gridx = 0; gbc.gridy = 7;
+		gbc.gridx = 0; gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
-                container.add(dataValidadeLb, gbc);
-
-                gbc.gridx = 1; gbc.gridy = 7;
-                gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-                container.add(painelData4, gbc);
-
-                gbc.gridx = 0; gbc.gridy = 11;
-                gbc.gridwidth = 2;
+		container.add(dataValidadeLb, gbc);
+		gbc.gridx = 1; gbc.gridy = 8;
+		gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+		container.add(painelData4, gbc);
+		gbc.gridx = 0; gbc.gridy = 9;
+		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.NONE; gbc.weightx = 1.0;
-                gbc.anchor = GridBagConstraints.CENTER;
-                container.add(btnSalvar, gbc);
-
+		gbc.anchor = GridBagConstraints.CENTER;
+		container.add(pnlBotoes, gbc);
 		//container.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-                container.setOpaque(false);
-                container.setBackground(Color.decode("#d0e3fb"));
-                //container.setPreferredSize(new Dimension(350, 200));
-
-                //
-                GridBagConstraints gbcMain = new GridBagConstraints();
-                gbcMain.insets = new Insets(150, 150, 150, 150);
-
-                this.setBackground(Color.decode("#d0e3fb"));
-                this.add(container, gbcMain);
-
-        }
-
+		container.setOpaque(false);
+		container.setBackground(Color.decode("#d0e3fb"));
+		//container.setPreferredSize(new Dimension(350, 200));
+		//
+		GridBagConstraints gbcMain = new GridBagConstraints();
+		gbcMain.insets = new Insets(150, 150, 150, 150);
+		this.setBackground(Color.decode("#d0e3fb"));
+		this.add(container, gbcMain);
+	}
 	//Construtor 2
-        public Form(Apresentacao app, String id, String nome, String numeroCertificado, String curso, String dataInicioCurso, String dataFimCurso, String dataEmissao, String dataValidade)
-        {
-                this(app);
-
-                this.id.setText(id);
-                this.nome.setSelectedItem(nome);
-                this.numeroCertificado.setText(numeroCertificado);
+	public Form(Apresentacao app, String id, String nome, String numeroCertificado, String curso, String dataInicioCurso, String dataFimCurso, String dataEmissao, String dataValidade)
+	{
+		this(app);
+		this.id.setText(id);
+		this.nome.setSelectedItem(nome);
+		this.numeroCertificado.setText(numeroCertificado);
 		this.curso.setSelectedItem(curso);
 		this.dataInicioCurso.getDTestField().setText(dataInicioCurso);
 		this.dataFimCurso.getDTestField().setText(dataFimCurso);
 		this.dataEmissao.getDTestField().setText(dataEmissao);
 		this.dataValidade.getDTestField().setText(dataValidade);
-
-                this.btnSalvar.setText("Atualizar");
-        }
-
+		this.btnSalvar.setText("Atualizar");
+	}
 	public void actionPerformed(ActionEvent e)
-        {
-                //Apresentacao app = new Apresentacao();
-
+	{
+		//Apresentacao app = new Apresentacao();
 		//Instanciar o modelo
-		
 		int idInt = Integer.parseInt(id.getText());
 		String nomeSelecionado = (String) this.nome.getSelectedItem();
 		String cursoSelecionado = (String) this.curso.getSelectedItem();
-		
 		CertificadoModelo modelo = new CertificadoModelo();
-
 		//String testData = txtData.getDTestField().getText();
-		
 		modelo.setId(idInt);
 		modelo.setNome(nomeSelecionado);
 		modelo.setNumeroCertificado(this.numeroCertificado.getText());
 		modelo.setCurso(cursoSelecionado);
-
 		modelo.setDataInicioCurso(this.dataInicioCurso.getDTestField().getText());
 		modelo.setDataFimCurso(this.dataFimCurso.getDTestField().getText());
 		modelo.setDataEmissao(this.dataEmissao.getDTestField().getText());
 		modelo.setDataValidade(this.dataValidade.getDTestField().getText());
-
 		//Dados da pesquisa
 		CertificadoFile eFile = new CertificadoFile(modelo);
 		CertificadoModelo result = eFile.pesquisarCertificadoPorProcesso(this.numeroCertificado.getText());
-
 		//Salvar dados
-		try{
-
+		try
+		{
 			if(nomeSelecionado.trim().isEmpty())
 				JOptionPane.showMessageDialog(null, "Certifique-se de que inseriu o nome!");
 			else if(numeroCertificado.getText().trim().isEmpty())
@@ -345,7 +375,6 @@ public class Form extends JPanel implements ActionListener
 			else
 			{
 				String btnText = btnSalvar.getText();
-
 				if("Salvar".equals(btnText))
 				{
 					if(result == null)
@@ -358,10 +387,8 @@ public class Form extends JPanel implements ActionListener
 					//if(result == null)
 						modelo.atualizarDadosPorId(idInt);
 					//else
-					//	JOptionPane.showMessageDialog(null, "Certificado já registrado. \n" + "Por favor, registre um novo certificado!");
-
+						// JOptionPane.showMessageDialog(null, "Certificado já registrado. \n" + "Por favor, registre um novo certificado!");
 				}
-
 				app.cardLayout.show(app.container, "DASHBOARD");
 			}
 		}
@@ -369,10 +396,6 @@ public class Form extends JPanel implements ActionListener
 		{
 			JOptionPane.showMessageDialog(this, "AVISO: Não foi possível salvar os dados." + "\n" + exc);
 		}
-
-        }
-
+	}
 }
-
-
 

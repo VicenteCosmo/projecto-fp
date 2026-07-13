@@ -28,6 +28,7 @@ public class CertificadoVisao extends JPanel
 	private CertificadosTabela tabelaCertificados;
 	private EstudantesTabela tabelaEstudantes;
 	private CategoriasTabela tabelaCategorias;
+	private Settings tabelaSettings;
 
 	public CertificadoVisao(Apresentacao app)
 	{
@@ -50,6 +51,7 @@ public class CertificadoVisao extends JPanel
 		tabelaCertificados = new CertificadosTabela(app);
 		tabelaEstudantes = new EstudantesTabela(app);
 		tabelaCategorias = new CategoriasTabela(app);
+		tabelaSettings = new Settings(app);
 
 		// Toda vez que este painel específico aparecer na tela, ele atualiza a tabela automaticamente
 		tabelaEstudantes.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -67,6 +69,7 @@ public class CertificadoVisao extends JPanel
 		painelConteudo.add(tabelaCertificados, "CERTIFICADOS");
 		painelConteudo.add(tabelaEstudantes, "ESTUDANTES");
 		painelConteudo.add(tabelaCategorias, "CATEGORIAS");
+		painelConteudo.add(tabelaSettings, "SETTINGS");
 
 		painelCentro.add(painelConteudo, BorderLayout.CENTER);
 
@@ -159,6 +162,13 @@ public class CertificadoVisao extends JPanel
 				painelConteudo.repaint();
 				cardLayoutConteudo.show(painelConteudo, "CATEGORIAS");
 			}
+			else if("Configuraçoões".equals(ev.getActionCommand()))
+                        {
+                                painelConteudo.revalidate();
+                                painelConteudo.repaint();
+                                cardLayoutConteudo.show(painelConteudo, "SETTINGS");
+                        }
+
 		}
 	}
 

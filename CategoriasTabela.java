@@ -68,13 +68,27 @@ class CategoriasTabela extends JPanel
 		
 			JLabel lblTabTitle = new JLabel("Categorias Recentes");
 			btnAdd = new JButton("Adicionar uma nova categoria");
+			
+			try 
+			{
+				btnAdd.setIcon(new ImageIcon("image/edit24.png"));
+			} 
+			catch(Exception e) 
+			{
+			}
+			btnAdd.setMnemonic(KeyEvent.VK_N);
+			btnAdd.setToolTipText("Pressione ALT + N para adicionar uma nova categoria");
 
 			btnAdd.addActionListener(
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						app.cardLayout.show(app.container, "CategoriaForm");
+						CategoriaForm form = new CategoriaForm(app);
+                                                form.revalidate();
+                                                form.repaint();
+                                                app.container.add(form, "CategoriaForm");
+                                                app.cardLayout.show(app.container, "CategoriaForm");
 					}
 				}
 			);
@@ -82,6 +96,16 @@ class CategoriasTabela extends JPanel
 			// Pesquisa
 			txtPesquisa = new JTextField(15);
 			btnPesquisar = new JButton("Pesquisar");
+			try 
+			{
+				btnPesquisar.setIcon(new ImageIcon("image/search32.png"));
+			} 
+			catch(Exception e) 
+			{	
+			}
+
+			btnPesquisar.setMnemonic(KeyEvent.VK_P);
+			btnPesquisar.setToolTipText("Pressione ALT + P para pesquisar");
 
 			// Filtra usando o texto digitado
 			btnPesquisar.addActionListener(new ActionListener() {
@@ -262,7 +286,7 @@ class CategoriasTabela extends JPanel
 		        JLabel lblVal = new JLabel(valor);
 		        lblVal.setFont(new Font("Arial", Font.BOLD, 24));
 		        lblVal.setForeground(new Color(24, 43, 73));
-		        
+
 		        JLabel lblSub = new JLabel(sub);
 		        lblSub.setForeground(new Color(40, 167, 69));
 		        lblSub.setFont(new Font("Arial", Font.PLAIN, 11));
